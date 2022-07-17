@@ -96,7 +96,6 @@ function tocouNaBola(bola, posicao){
 
 function gameLoop(){
     tocouNaBola(bola, posicao6Esquerda)
-    bola.atualizaPosicao({x: posicao1Esquerda.x, y: posicao1Esquerda.y})
     showScreen.renderSelf()
     requestAnimationFrame(gameLoop)
 }
@@ -120,6 +119,7 @@ const screens = {
             posicoes.forEach(( posicao )=>{
                 posicao.renderSelf()
             })
+            bola.atualizaPosicao({x: posicao1Esquerda.x, y: posicao1Esquerda.y})
         }
     }
 }
