@@ -20,23 +20,48 @@ class Objeto{
 }
 
 class PosicaoJogadores extends Objeto{
-    constructor(imagem,x,y,w,h){
+    constructor(imagem,x,y,w,h,rl){
         super(imagem,x,y,w,h)
+        this.rl = rl
     }
     renderSelf(){
+        //Esse renderSelf() deve ser retirado quando o jogo estiver completo
         contexto.drawImage(this.imagem, this.x, this.y, this.w, this.h)
-        contexto.fillStyle = 'red';
+        if(this.rl == 'l'){
+            contexto.fillStyle = 'red';
+        } else{
+            contexto.fillStyle = 'blue';
+        }
         contexto.fillRect(this.x, this.y, 100, 100);
     }
 }
 
-posicao1Esquerda = new PosicaoJogadores(bolaImage, 200, 700, 100, 100)
-posicao6Esquerda = new PosicaoJogadores(bolaImage, 400, 450, 100, 100)
-posicao5Esquerda = new PosicaoJogadores(bolaImage, 200, 200, 100, 100)
-posicao4Esquerda = new PosicaoJogadores(bolaImage, 650, 200, 100, 100)
-posicao3Esquerda = new PosicaoJogadores(bolaImage, 750, 450, 100, 100)
-posicao2Esquerda = new PosicaoJogadores(bolaImage, 650, 700, 100, 100)
+posicao1Esquerda = new PosicaoJogadores(bolaImage, 200, 700, 100, 100,'l')
+posicao6Esquerda = new PosicaoJogadores(bolaImage, 400, 450, 100, 100,'l')
+posicao5Esquerda = new PosicaoJogadores(bolaImage, 200, 200, 100, 100,'l')
+posicao4Esquerda = new PosicaoJogadores(bolaImage, 650, 200, 100, 100,'l')
+posicao3Esquerda = new PosicaoJogadores(bolaImage, 750, 450, 100, 100,'l')
+posicao2Esquerda = new PosicaoJogadores(bolaImage, 650, 700, 100, 100,'l')
 
+// posicao1Direita = new PosicaoJogadores(bolaImage, 1500, 700, 100, 100, 'r')
+// posicao6Direita = new PosicaoJogadores(bolaImage, 1300, 450, 100, 100, 'r')
+// posicao5Direita = new PosicaoJogadores(bolaImage, 1500, 200, 100, 100, 'r')
+// posicao4Direita = new PosicaoJogadores(bolaImage, 1050, 700, 100, 100, 'r')
+// posicao3Direita = new PosicaoJogadores(bolaImage, 950, 450, 100, 100, 'r')
+// posicao2Direita = new PosicaoJogadores(bolaImage, 650, 700, 100, 100, 'r')
+
+posicao1Direita = new PosicaoJogadores(bolaImage, 1500, 200, 100, 100, 'r')
+posicao6Direita = new PosicaoJogadores(bolaImage, 1300, 450, 100, 100, 'r')
+posicao5Direita = new PosicaoJogadores(bolaImage, 1500, 700, 100, 100, 'r')
+posicao4Direita = new PosicaoJogadores(bolaImage, 1050, 700, 100, 100, 'r')
+posicao3Direita = new PosicaoJogadores(bolaImage, 950, 450, 100, 100, 'r')
+posicao2Direita = new PosicaoJogadores(bolaImage, 1050, 200, 100, 100, 'r')
+
+
+
+const posicoes = 
+[posicao1Esquerda, posicao6Esquerda, posicao5Esquerda, posicao4Esquerda, posicao3Esquerda, posicao2Esquerda,
+posicao1Direita, posicao6Direita, posicao5Direita, posicao4Direita, posicao3Direita, posicao2Direita]
 
 class ObjetoBola extends Objeto{
     constructor(imagem,x,y,w,h){
@@ -45,16 +70,16 @@ class ObjetoBola extends Objeto{
     atualizaPosicao(req){
         if(this.x != req.x){
             if(this.x < req.x){
-                this.x = this.x + 5
+                this.x = this.x + 15
             }else{
-                this.x = this.x - 5
+                this.x = this.x - 15
             }
         }
         if(this.y != req.y){
             if(this.y < req.y){
                 this.y = this.y + 5
             }else {
-                this.y = this.y - 5 
+                this.y = this.y - 5
             }
         }
     }
@@ -63,7 +88,7 @@ class ObjetoBola extends Objeto{
 quadra = new Objeto(quadraImage,0,0,1800,1000)
 // Área do jogo começa realmente em x: 125 e y: 105
 // Temina em x: 1545 e y: 745
-bola = new ObjetoBola(bolaImage, 1025, 705, 130, 155)
+bola = new ObjetoBola(bolaImage, posicao1Direita.x, posicao1Direita.y, 130, 155)
 
 function fazColisao(bola, posicao){
     if(bola.x == posicao.x && bola.y == posicao.y){
@@ -75,14 +100,11 @@ function fazColisao(bola, posicao){
 function gameLoop(){
     quadra.renderSelf()
     bola.renderSelf()
-    posicao1Esquerda.renderSelf()
-    posicao6Esquerda.renderSelf()
-    posicao5Esquerda.renderSelf()
-    posicao4Esquerda.renderSelf()
-    posicao3Esquerda.renderSelf()
-    posicao2Esquerda.renderSelf()
+    posicoes.forEach(( posicao )=>{
+        posicao.renderSelf()
+    })
     fazColisao(bola, posicao6Esquerda)
-    bola.atualizaPosicao({x: 400, y: 450})
+    bola.atualizaPosicao({x: posicao1Esquerda.x, y: posicao1Esquerda.y})
     requestAnimationFrame(gameLoop)
 }
 gameLoop()
