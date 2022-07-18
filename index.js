@@ -90,12 +90,12 @@ bola = new ObjetoBola(bolaImage, posicao1Direita.x, posicao1Direita.y, 130, 155)
 function tocouNaBola(bola, posicao){
     if(bola.x == posicao.x && bola.y == posicao.y){
         console.log('Recebeu!!!!')
+        gustavo.hasBola = true
     }
 }
 
 
 function gameLoop(){
-    tocouNaBola(bola, posicao6Esquerda)
     showScreen.renderSelf()
     requestAnimationFrame(gameLoop)
 }
@@ -103,23 +103,28 @@ function gameLoop(){
 
 let showScreen = {}
 function changeScreen(screen){
+    console.log(`Mudando para a tela: ${screen.nome}!`)
     showScreen = screen
 }
 const screens = {
     startScreen:{
+        nome: "StartScreen",
         renderSelf(){
             quadra.renderSelf()
             telaComeçar.renderSelf()
         }
     },
     gameScreen:{
+        nome: 'GameScreen',
         renderSelf(){
             quadra.renderSelf()
-            bola.renderSelf()
             posicoes.forEach(( posicao )=>{
                 posicao.renderSelf()
             })
+            gustavo.renderSelf()
+            bola.renderSelf()
             bola.atualizaPosicao({x: posicao1Esquerda.x, y: posicao1Esquerda.y})
+            tocouNaBola(bola, posicao1Esquerda)
         }
     }
 }
@@ -133,3 +138,50 @@ eventos.forEach((evento) => {
 })
 changeScreen(screens.startScreen)
 gameLoop()
+
+
+class Time{
+    sets = 0
+    pontos = 0
+    constructor(nome, jogadores){
+        this.nome = nome
+        this.jogadores = jogadores
+    }
+}
+class Jogador{
+    hasBola = false
+    constructor(nome = null,imagem, posicao){
+        this.nome = nome
+        this.imagem = imagem
+        this.posicao = posicao
+    }
+    renderSelf(){
+        contexto.drawImage(this.imagem, this.posicao.x, this.posicao.y, 100, 100)
+    }
+}
+
+const imagemGustavo = new Image()
+imagemGustavo.src = "./images/jogadores/trentas.jpg"
+const imagemVelho = new Image()
+imagemVelho.src = "./images/jogadores/velho.jpg"
+const imagemAmanda = new Image()
+imagemAmanda.src = "./images/jogadores/amanda.jpg"
+const imagemNicolas = new Image()
+imagemNicolas.src = "./images/jogadores/nicocas.jpg"
+const imagemLip = new Image()
+imagemLip.src = "./images/jogadores/lip.jpg"
+const imagemBorn = new Image()
+imagemBorn.src = "./images/jogadores/born.jpg"
+
+
+const gustavo = new Jogador("Trentini", imagemGustavo, posicao1Direita)
+const velho = new Jogador("Velho")
+const amanda = new Jogador("Amanda")
+const nicolas = new Jogador("Nicolas")
+const lip = new Jogador("Lip")
+const born = new Jogador("Born")
+
+
+
+timeDireita = new Time('Araquamanos',[gustavo, velho, amanda, nicolas, lip, born])
+console.log(gustavo.hasBola)
