@@ -127,7 +127,7 @@ const screens = {
             bola.renderSelf()
             bola.atualizaPosicao({x: posicao1Esquerda.x, y: posicao1Esquerda.y})
             tocouNaBola(bola, posicao1Esquerda)
-            timeDireita.realizarRodizio()
+            
         }
     }
 }
@@ -170,30 +170,35 @@ class Jogador{
     constructor(nome = null,imagem, posicao){
         this.nome = nome
         this.imagem = imagem
-        this.posicao = posicao
+        this.x = posicao.x
+        this.y = posicao.y
     }
     renderSelf(){
-        contexto.drawImage(this.imagem, this.posicao.x, this.posicao.y, 100, 100)
+        contexto.drawImage(this.imagem, this.x, this.y, 100, 100)
     }
     andarRodizio(novaposicao){
-        if(this.posicao.x != novaposicao.x && this.posicao.y != novaposicao.y){
-            if(this.posicao.x != novaposicao.x){
-                if(this.posicao.x > novaposicao.x){
-                    this.posicao.x -= 1
-                }else{
-                    this.posicao.x += 1
+        let intervalo = setInterval(() => {
+            if(this.x != novaposicao.x || this.y != novaposicao.y){
+                if(this.x != novaposicao.x){
+                    if(this.x > novaposicao.x){
+                        this.x -= 1
+                    }else{
+                        this.x += 1
+                    }
                 }
-            }
-            if(this.posicao.y != novaposicao.y){
-                if(this.posicao.y> novaposicao.y){
-                    this.posicao.y -= 1
-                }else{
-                    this.posicao.y += 1
+                if(this.y != novaposicao.y){
+                    if(this.y> novaposicao.y){
+                        this.y -= 1
+                    }else{
+                        this.y += 1
+                    }
                 }
+            }else {
+                this.x = novaposicao.x
+                this.y = novaposicao.y
+                clearInterval(intervalo) 
             }
-        } else{
-            this.posicao = novaposicao
-        }
+        }, 10)
     }
 }
 
