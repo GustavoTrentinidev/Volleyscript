@@ -72,6 +72,7 @@ const posicoes =
 posicao1Direita, posicao6Direita, posicao5Direita, posicao4Direita, posicao3Direita, posicao2Direita]
 
 class ObjetoBola extends Objeto{
+    req = {}
     constructor(imagem,x,y,w,h){
         super(imagem,x,y,w,h)
     }
@@ -106,7 +107,6 @@ function tocouNaBola(){
             &&
             (bola.y == jogador.y || bola.y == jogador.y + 100 || bola.y == jogador.y - 100 )
             ){
-            console.log(jogador.nome)
         }
     })
 }
@@ -145,8 +145,10 @@ const screens = {
                 player.renderSelf()
             })
             bola.renderSelf()
-            //bola.atualizaPosicao({x: posicao1Esquerda.x, y: posicao1Esquerda.y})
-            tocouNaBola()
+            if(bola.x != bola.req.x || bola.y != bola.req.y){
+                bola.atualizaPosicao({x: bola.req.x, y: bola.req.y})
+            }
+            //tocouNaBola()
         }
     }
 }
@@ -157,6 +159,7 @@ eventos.forEach((evento) => {
     window.addEventListener(evento, ()=>{
         if(showScreen != screens.gameScreen){
             changeScreen(screens.gameScreen)
+            jogo.caraoucoroa()
         }
     })
 })
@@ -230,6 +233,13 @@ class Jogador{
             }
         }, 10)
     }
+    sacar(){
+        if(timeEsquerda.jogadores.indexOf(this)){
+            bola.req = {x: numeroAleatorio(1545), y: numeroAleatorio(745)}
+        }else{
+            bola.req = {x: numeroAleatorio(1545), y: numeroAleatorio(745)}
+        }
+    }
 }
 
 const imagemGustavo = new Image()
@@ -272,9 +282,14 @@ function numeroAleatorio(range){
 }
 
 class Jogo{
+    ultimo_time_a_marcar = null
     constructor(timeEsquerda, timeDireita){
-        timeEsquerda = timeEsquerda
-        timeDireita = timeDireita
+        if(!(timeEsquerda instanceof Time) || !(timeDireita instanceof Time)){
+            throw new Error('Os times devem ser uma instancia da classe Time')
+        }else{
+            timeEsquerda = timeEsquerda
+            timeDireita = timeDireita
+        }
     }
     caraoucoroa(){
         if(numeroAleatorio(1) == 0){
@@ -282,7 +297,6 @@ class Jogo{
         }else {
             this.comecarSet(timeDireita)
         }
-        return this
     }
     comecarSet(time){
         if(timeEsquerda.sets == 0 && timeDireita.sets == 0){
@@ -293,18 +307,20 @@ class Jogo{
                 if((player.x == posicao1Esquerda.x) && (player.y == posicao1Esquerda.y)){
                     bola.x = player.x
                     bola.y = player.y
+                    player.sacar()
                 }
             }else{
                 if((player.x == posicao1Direita.x) && (player.y == posicao1Direita.y)){
                     bola.x = player.x
                     bola.y = player.y
+                    player.sacar()
                 }
             }
         })
+
         console.log(time)
 
     }
 }
 
 const jogo = new Jogo(timeEsquerda, timeDireita)
-jogo.caraoucoroa()
