@@ -12,8 +12,13 @@ telaDeInicio.src = "./images/telainicio.png"
 class Objeto{
     constructor(imagem,x,y,w,h){
         this.imagem = imagem
-        this.x = x
-        this.y = y
+        if(this instanceof PosicaoJogadores){
+            this._x = x
+            this._y = y
+        }else{
+            this.x = x
+            this.y = y
+        }
         this.w = w
         this.h = h
     }
@@ -27,6 +32,13 @@ class PosicaoJogadores extends Objeto{
         super(imagem,x,y,w,h)
         this.rl = rl
     }
+    get x(){
+        return this._x
+    }
+    get y(){
+        return this._y
+    }
+    
     renderSelf(){
         //Esse renderSelf() deve ser retirado quando o jogo estiver completo
         contexto.drawImage(this.imagem, this.x, this.y, this.w, this.h)
@@ -89,7 +101,7 @@ bola = new ObjetoBola(bolaImage, posicao1Direita.x, posicao1Direita.y, 130, 155)
 
 function tocouNaBola(bola, posicao){
     if(bola.x == posicao.x && bola.y == posicao.y){
-        console.log('Recebeu!!!!')
+        // console.log('Recebeu!!!!')
         gustavo.hasBola = true
     }
 }
@@ -121,7 +133,9 @@ const screens = {
             posicoes.forEach(( posicao )=>{
                 posicao.renderSelf()
             })
-            gustavo.renderSelf()
+            timeDireita.jogadores.forEach((player)=>{
+                player.renderSelf()
+            })
             bola.renderSelf()
             bola.atualizaPosicao({x: posicao1Esquerda.x, y: posicao1Esquerda.y})
             tocouNaBola(bola, posicao1Esquerda)
@@ -143,20 +157,69 @@ gameLoop()
 class Time{
     sets = 0
     pontos = 0
-    constructor(nome, jogadores){
+    constructor(nome, jogadores, ladoQuadra){
         this.nome = nome
         this.jogadores = jogadores
+        this.ladoQuadra = ladoQuadra
+    }
+    realizarRodizio(){
+        let index0 = this.jogadores[0]
+        this.jogadores.splice(0,1)
+        this.jogadores.push(index0)
+        if(this.ladoQuadra == 'direita'){
+            this.jogadores[5].andarRodizio(posicao1Direita)
+            this.jogadores[4].andarRodizio(posicao6Direita)
+            this.jogadores[3].andarRodizio(posicao5Direita)
+            this.jogadores[2].andarRodizio(posicao4Direita)
+            this.jogadores[1].andarRodizio(posicao3Direita)
+            this.jogadores[0].andarRodizio(posicao2Direita)
+        } else{
+            this.jogadores[0].andarRodizio(posicao1Direita)
+            this.jogadores[1].andarRodizio(posicao6Direita)
+            this.jogadores[2].andarRodizio(posicao5Direita)
+            this.jogadores[3].andarRodizio(posicao4Direita)
+            this.jogadores[4].andarRodizio(posicao3Direita)
+            this.jogadores[5].andarRodizio(posicao2Direita)
+        }
+        console.log(this.jogadores)
     }
 }
+
+
 class Jogador{
     hasBola = false
     constructor(nome = null,imagem, posicao){
         this.nome = nome
         this.imagem = imagem
-        this.posicao = posicao
+        this.x = posicao.x
+        this.y = posicao.y
     }
     renderSelf(){
-        contexto.drawImage(this.imagem, this.posicao.x, this.posicao.y, 100, 100)
+        contexto.drawImage(this.imagem, this.x, this.y, 100, 100)
+    }
+    andarRodizio(novaposicao){
+        let intervalo = setInterval(() => {
+            if(this.x != novaposicao.x || this.y != novaposicao.y){
+                if(this.x != novaposicao.x){
+                    if(this.x > novaposicao.x){
+                        this.x -= 1
+                    }else{
+                        this.x += 1
+                    }
+                }
+                if(this.y != novaposicao.y){
+                    if(this.y> novaposicao.y){
+                        this.y -= 1
+                    }else{
+                        this.y += 1
+                    }
+                }
+            }else {
+                this.x = novaposicao.x
+                this.y = novaposicao.y
+                clearInterval(intervalo) 
+            }
+        }, 10)
     }
 }
 
@@ -174,14 +237,20 @@ const imagemBorn = new Image()
 imagemBorn.src = "./images/jogadores/born.jpg"
 
 
-const gustavo = new Jogador("Trentini", imagemGustavo, posicao1Direita)
-const velho = new Jogador("Velho")
-const amanda = new Jogador("Amanda")
-const nicolas = new Jogador("Nicolas")
-const lip = new Jogador("Lip")
-const born = new Jogador("Born")
+const born = new Jogador("Born", imagemBorn, posicao1Direita)
+const velho = new Jogador("Velho", imagemVelho, posicao2Direita)
+const gustavo = new Jogador("Trentini", imagemGustavo, posicao3Direita)
+const amanda = new Jogador("Amanda", imagemAmanda, posicao4Direita)
+const nicolas = new Jogador("Nicolas", imagemNicolas, posicao5Direita)
+const lip = new Jogador("Lip", imagemLip, posicao6Direita)
 
 
 
-timeDireita = new Time('Araquamanos',[gustavo, velho, amanda, nicolas, lip, born])
+timeDireita = new Time('Araquamanos',[born, velho, gustavo, amanda, nicolas, lip], 'direita')
 console.log(gustavo.hasBola)
+
+
+function jogo(){
+    timeDireita.realizarRodizio()
+}
+jogo()
