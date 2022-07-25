@@ -12,8 +12,13 @@ telaDeInicio.src = "./images/telainicio.png"
 class Objeto{
     constructor(imagem,x,y,w,h){
         this.imagem = imagem
-        this.x = x
-        this.y = y
+        if(this instanceof PosicaoJogadores){
+            this._x = x
+            this._y = y
+        }else{
+            this.x = x
+            this.y = y
+        }
         this.w = w
         this.h = h
     }
@@ -27,6 +32,13 @@ class PosicaoJogadores extends Objeto{
         super(imagem,x,y,w,h)
         this.rl = rl
     }
+    get x(){
+        return this._x
+    }
+    get y(){
+        return this._y
+    }
+    
     renderSelf(){
         //Esse renderSelf() deve ser retirado quando o jogo estiver completo
         contexto.drawImage(this.imagem, this.x, this.y, this.w, this.h)
@@ -127,7 +139,6 @@ const screens = {
             bola.renderSelf()
             bola.atualizaPosicao({x: posicao1Esquerda.x, y: posicao1Esquerda.y})
             tocouNaBola(bola, posicao1Esquerda)
-            
         }
     }
 }
@@ -146,20 +157,30 @@ gameLoop()
 class Time{
     sets = 0
     pontos = 0
-    constructor(nome, jogadores){
+    constructor(nome, jogadores, ladoQuadra){
         this.nome = nome
         this.jogadores = jogadores
+        this.ladoQuadra = ladoQuadra
     }
     realizarRodizio(){
         let index0 = this.jogadores[0]
         this.jogadores.splice(0,1)
         this.jogadores.push(index0)
-        this.jogadores[5].andarRodizio(posicao1Direita)
-        this.jogadores[4].andarRodizio(posicao6Direita)
-        this.jogadores[3].andarRodizio(posicao5Direita)
-        this.jogadores[2].andarRodizio(posicao4Direita)
-        this.jogadores[1].andarRodizio(posicao3Direita)
-        this.jogadores[0].andarRodizio(posicao2Direita)
+        if(this.ladoQuadra == 'direita'){
+            this.jogadores[5].andarRodizio(posicao1Direita)
+            this.jogadores[4].andarRodizio(posicao6Direita)
+            this.jogadores[3].andarRodizio(posicao5Direita)
+            this.jogadores[2].andarRodizio(posicao4Direita)
+            this.jogadores[1].andarRodizio(posicao3Direita)
+            this.jogadores[0].andarRodizio(posicao2Direita)
+        } else{
+            this.jogadores[0].andarRodizio(posicao1Direita)
+            this.jogadores[1].andarRodizio(posicao6Direita)
+            this.jogadores[2].andarRodizio(posicao5Direita)
+            this.jogadores[3].andarRodizio(posicao4Direita)
+            this.jogadores[4].andarRodizio(posicao3Direita)
+            this.jogadores[5].andarRodizio(posicao2Direita)
+        }
         console.log(this.jogadores)
     }
 }
@@ -225,5 +246,11 @@ const lip = new Jogador("Lip", imagemLip, posicao6Direita)
 
 
 
-timeDireita = new Time('Araquamanos',[born, velho, gustavo, amanda, nicolas, lip])
+timeDireita = new Time('Araquamanos',[born, velho, gustavo, amanda, nicolas, lip], 'direita')
 console.log(gustavo.hasBola)
+
+
+function jogo(){
+    timeDireita.realizarRodizio()
+}
+jogo()
