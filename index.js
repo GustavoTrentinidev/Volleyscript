@@ -99,11 +99,16 @@ quadra = new Objeto(quadraImage,0,0,1800,1000)
 telaComeçar = new Objeto(telaDeInicio,0,0,1800,1000)
 bola = new ObjetoBola(bolaImage, posicao1Direita.x, posicao1Direita.y, 130, 155)
 
-function tocouNaBola(bola, posicao){
-    if(bola.x == posicao.x && bola.y == posicao.y){
-        // console.log('Recebeu!!!!')
-        gustavo.hasBola = true
-    }
+function tocouNaBola(){
+    timeDireita.jogadores.forEach((jogador)=>{
+        if(
+            (bola.x == jogador.x || bola.x == jogador.x + 100 || bola.x == jogador.x - 100)
+            &&
+            (bola.y == jogador.y || bola.y == jogador.y + 100 || bola.y == jogador.y - 100 )
+            ){
+            console.log(jogador.nome)
+        }
+    })
 }
 
 
@@ -133,12 +138,15 @@ const screens = {
             posicoes.forEach(( posicao )=>{
                 posicao.renderSelf()
             })
+            timeEsquerda.jogadores.forEach((player)=>{
+                player.renderSelf()
+            })
             timeDireita.jogadores.forEach((player)=>{
                 player.renderSelf()
             })
             bola.renderSelf()
-            bola.atualizaPosicao({x: posicao1Esquerda.x, y: posicao1Esquerda.y})
-            tocouNaBola(bola, posicao1Esquerda)
+            //bola.atualizaPosicao({x: posicao1Esquerda.x, y: posicao1Esquerda.y})
+            tocouNaBola()
         }
     }
 }
@@ -147,7 +155,9 @@ const screens = {
 var eventos = ["keydown" , "click"]
 eventos.forEach((evento) => {
     window.addEventListener(evento, ()=>{
-        changeScreen(screens.gameScreen)
+        if(showScreen != screens.gameScreen){
+            changeScreen(screens.gameScreen)
+        }
     })
 })
 changeScreen(screens.startScreen)
@@ -174,14 +184,13 @@ class Time{
             this.jogadores[1].andarRodizio(posicao3Direita)
             this.jogadores[0].andarRodizio(posicao2Direita)
         } else{
-            this.jogadores[0].andarRodizio(posicao1Direita)
-            this.jogadores[1].andarRodizio(posicao6Direita)
-            this.jogadores[2].andarRodizio(posicao5Direita)
-            this.jogadores[3].andarRodizio(posicao4Direita)
-            this.jogadores[4].andarRodizio(posicao3Direita)
-            this.jogadores[5].andarRodizio(posicao2Direita)
+            this.jogadores[0].andarRodizio(posicao1Esquerda)
+            this.jogadores[1].andarRodizio(posicao6Esquerda)
+            this.jogadores[2].andarRodizio(posicao5Esquerda)
+            this.jogadores[3].andarRodizio(posicao4Esquerda)
+            this.jogadores[4].andarRodizio(posicao3Esquerda)
+            this.jogadores[5].andarRodizio(posicao2Esquerda)
         }
-        console.log(this.jogadores)
     }
 }
 
@@ -244,13 +253,58 @@ const amanda = new Jogador("Amanda", imagemAmanda, posicao4Direita)
 const nicolas = new Jogador("Nicolas", imagemNicolas, posicao5Direita)
 const lip = new Jogador("Lip", imagemLip, posicao6Direita)
 
+const imagemRandons = new Image()
+imagemRandons.src = "./images/jogadores/jopinguim.jpg"
 
+const random1 = new Jogador("Random1", imagemRandons, posicao1Esquerda)
+const random2 = new Jogador("Random2", imagemRandons, posicao2Esquerda)
+const random3 = new Jogador("Random3", imagemRandons, posicao3Esquerda)
+const random4 = new Jogador("Random4", imagemRandons, posicao4Esquerda)
+const random5 = new Jogador("Random5", imagemRandons, posicao5Esquerda)
+const random6 = new Jogador("Random6", imagemRandons, posicao6Esquerda)
 
 timeDireita = new Time('Araquamanos',[born, velho, gustavo, amanda, nicolas, lip], 'direita')
-console.log(gustavo.hasBola)
+timeEsquerda = new Time('RandomsPlays',[random1, random6, random5, random4, random3, random2], 'esquerda')
+times = [timeEsquerda, timeDireita]
 
-
-function jogo(){
-    timeDireita.realizarRodizio()
+function numeroAleatorio(range){
+    return Math.round(Math.random() * range) 
 }
-jogo()
+
+class Jogo{
+    constructor(timeEsquerda, timeDireita){
+        timeEsquerda = timeEsquerda
+        timeDireita = timeDireita
+    }
+    caraoucoroa(){
+        if(numeroAleatorio(1) == 0){
+            this.comecarSet(timeEsquerda)
+        }else {
+            this.comecarSet(timeDireita)
+        }
+        return this
+    }
+    comecarSet(time){
+        if(timeEsquerda.sets == 0 && timeDireita.sets == 0){
+            timeDireita.realizarRodizio()
+        }
+        time.jogadores.forEach((player) => {
+            if(time.ladoQuadra == 'esquerda'){
+                if((player.x == posicao1Esquerda.x) && (player.y == posicao1Esquerda.y)){
+                    bola.x = player.x
+                    bola.y = player.y
+                }
+            }else{
+                if((player.x == posicao1Direita.x) && (player.y == posicao1Direita.y)){
+                    bola.x = player.x
+                    bola.y = player.y
+                }
+            }
+        })
+        console.log(time)
+
+    }
+}
+
+const jogo = new Jogo(timeEsquerda, timeDireita)
+jogo.caraoucoroa()
