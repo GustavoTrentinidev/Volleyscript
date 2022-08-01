@@ -147,7 +147,7 @@ const screens = {
             bola.renderSelf()
             if(bola.x != bola.req.x || bola.y != bola.req.y){
                 bola.atualizaPosicao({x: bola.req.x, y: bola.req.y})
-            }
+            } //Bola anda constantemente quando posição for diferente da requisição
             //tocouNaBola()
         }
     }
@@ -235,11 +235,23 @@ class Jogador{
     }
     sacar(){
         if(timeEsquerda.jogadores.indexOf(this)){
-            bola.req = {x: numeroAleatorio(1545), y: numeroAleatorio(745)}
+            bola.req = gerarPosReq(1545, 745)
         }else{
-            bola.req = {x: numeroAleatorio(1545), y: numeroAleatorio(745)}
+            bola.req = gerarPosReq(1545, 745)
         }
     }
+}
+
+function gerarPosReq(xnum, ynum){
+    let x = numeroAleatorio(xnum)
+    let y = numeroAleatorio(ynum)
+    while(x % 10 != 0){
+        x = numeroAleatorio(xnum)
+    }
+    while(y % 5 != 0){
+        y = numeroAleatorio(ynum)
+    }
+    return {x: x, y: y}
 }
 
 const imagemGustavo = new Image()
