@@ -73,10 +73,16 @@ posicao1Direita, posicao6Direita, posicao5Direita, posicao4Direita, posicao3Dire
 
 class ObjetoBola extends Objeto{
     req = {}
+    bolaAndando = false
     constructor(imagem,x,y,w,h){
         super(imagem,x,y,w,h)
     }
     atualizaPosicao(req){
+        if(this.x != req.x || this.y != req.y){
+            this.bolaAndando = true
+        }else{
+            this.bolaAndando = false
+        }
         if(this.x != req.x){
             if(this.x < req.x){
                 this.x = this.x + 10
@@ -101,16 +107,14 @@ telaComeçar = new Objeto(telaDeInicio,0,0,1800,1000)
 bola = new ObjetoBola(bolaImage, posicao1Direita.x, posicao1Direita.y, 130, 155)
 
 function tocouNaBola(){
-    timeDireita.jogadores.forEach((jogador)=>{
-        if(
-            (bola.x == jogador.x || bola.x == jogador.x + 100 || bola.x == jogador.x - 100)
-            &&
-            (bola.y == jogador.y || bola.y == jogador.y + 100 || bola.y == jogador.y - 100 )
-            ){
-        }
+    times.forEach(time=>{
+        time.jogadores.forEach((jogador)=>{
+            if(bola.x < jogador.x + 100 && bola.y < jogador.y + 100 && bola.x > jogador.x - 100 && bola.y > jogador.y - 100){
+                console.log(jogador.nome)
+            }
+        })
     })
 }
-
 
 function gameLoop(){
     showScreen.renderSelf()
@@ -148,7 +152,7 @@ const screens = {
             if(bola.x != bola.req.x || bola.y != bola.req.y){
                 bola.atualizaPosicao({x: bola.req.x, y: bola.req.y})
             } //Bola anda constantemente quando posição for diferente da requisição
-            //tocouNaBola()
+            tocouNaBola()
         }
     }
 }
@@ -194,6 +198,23 @@ class Time{
             this.jogadores[4].andarRodizio(posicao3Esquerda)
             this.jogadores[5].andarRodizio(posicao2Esquerda)
         }
+    }
+    saque(){
+        this.jogadores.forEach((player) => {
+            if(this.ladoQuadra == 'esquerda'){
+                if((player.x == posicao1Esquerda.x) && (player.y == posicao1Esquerda.y)){
+                    bola.x = player.x
+                    bola.y = player.y
+                    player.sacar()
+                }
+            }else{
+                if((player.x == posicao1Direita.x) && (player.y == posicao1Direita.y)){
+                    bola.x = player.x
+                    bola.y = player.y
+                    player.sacar()
+                }
+            }
+        })
     }
 }
 
@@ -314,21 +335,7 @@ class Jogo{
         if(timeEsquerda.sets == 0 && timeDireita.sets == 0){
             timeDireita.realizarRodizio()
         }
-        time.jogadores.forEach((player) => {
-            if(time.ladoQuadra == 'esquerda'){
-                if((player.x == posicao1Esquerda.x) && (player.y == posicao1Esquerda.y)){
-                    bola.x = player.x
-                    bola.y = player.y
-                    player.sacar()
-                }
-            }else{
-                if((player.x == posicao1Direita.x) && (player.y == posicao1Direita.y)){
-                    bola.x = player.x
-                    bola.y = player.y
-                    player.sacar()
-                }
-            }
-        })
+        time.saque()
 
         console.log(time)
 
