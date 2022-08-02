@@ -24,6 +24,8 @@ class Objeto{
     }
     renderSelf(){
         contexto.drawImage(this.imagem, this.x, this.y, this.w, this.h)
+        // contexto.fillStyle = 'red'
+        // contexto.fillRect(850, 780, 100, 100);
     }
 }
 
@@ -77,12 +79,14 @@ class ObjetoBola extends Objeto{
     constructor(imagem,x,y,w,h){
         super(imagem,x,y,w,h)
     }
-    atualizaPosicao(req){
-        if(this.x != req.x || this.y != req.y){
-            this.bolaAndando = true
-        }else{
+    verificaBolaAndando(){
+        if(this.x == this.req.x && this.y == this.req.y){
             this.bolaAndando = false
+        }else{
+            this.bolaAndando = true
         }
+    }
+    atualizaPosicao(req){
         if(this.x != req.x){
             if(this.x < req.x){
                 this.x = this.x + 10
@@ -105,16 +109,6 @@ quadra = new Objeto(quadraImage,0,0,1800,1000)
 // Temina em x: 1545 e y: 745
 telaComeçar = new Objeto(telaDeInicio,0,0,1800,1000)
 bola = new ObjetoBola(bolaImage, posicao1Direita.x, posicao1Direita.y, 130, 155)
-
-function tocouNaBola(){
-    times.forEach(time=>{
-        time.jogadores.forEach((jogador)=>{
-            if(bola.x < jogador.x + 100 && bola.y < jogador.y + 100 && bola.x > jogador.x - 100 && bola.y > jogador.y - 100){
-                console.log(jogador.nome)
-            }
-        })
-    })
-}
 
 function gameLoop(){
     showScreen.renderSelf()
@@ -149,10 +143,11 @@ const screens = {
                 player.renderSelf()
             })
             bola.renderSelf()
+            bola.verificaBolaAndando()
             if(bola.x != bola.req.x || bola.y != bola.req.y){
                 bola.atualizaPosicao({x: bola.req.x, y: bola.req.y})
             } //Bola anda constantemente quando posição for diferente da requisição
-            tocouNaBola()
+            //tocouNaBola()
         }
     }
 }
@@ -261,6 +256,21 @@ class Jogador{
             bola.req = gerarPosReq(1545, 745)
         }
     }
+    receber(){
+        if(timeEsquerda.jogadores.indexOf(this) != -1){
+            if(numeroAleatorio(3) == 0){
+                bola.req = gerarPosReq(1545, 745)
+            }else {
+                bola.req = {x: posicao3Esquerda.x, y: posicao3Esquerda.y}
+            }
+        }else {
+            if(numeroAleatorio(3) == 0){
+                bola.req = gerarPosReq(1545, 745)
+            }else {
+                bola.req = {x: posicao3Direita.x, y: posicao3Direita.y}
+            }
+        }
+    }
 }
 
 function gerarPosReq(xnum, ynum){
@@ -324,20 +334,61 @@ class Jogo{
             timeDireita = timeDireita
         }
     }
+    aumentarPontuacao(time){
+        time.pontos += 1
+        if(this.ultimo_time_a_marcar != time){
+            time.realizarRodizio()
+        }
+        this.ultimo_time_a_marcar = time
+        //verificaPontos()
+    }
     caraoucoroa(){
         if(numeroAleatorio(1) == 0){
-            this.comecarSet(timeEsquerda)
+            this.comecarRally(timeEsquerda)
         }else {
-            this.comecarSet(timeDireita)
+            this.comecarRally(timeDireita)
         }
     }
-    comecarSet(time){
+    comecarRally(time){
+        let outroTime = times.filter(e => {return e != time})
+        outroTime = outroTime[0]
+        console.log(outroTime)
         if(timeEsquerda.sets == 0 && timeDireita.sets == 0){
             timeDireita.realizarRodizio()
         }
         time.saque()
-
-        console.log(time)
+        bola.bolaAndando = true
+        let intervalo = setInterval(() =>{
+            if(bola.bolaAndando == false){
+                clearInterval(intervalo)
+                let jogadorComBola = []
+                outroTime.jogadores.forEach((jogador)=>{
+                    if(bola.x < jogador.x + 150 && bola.y < jogador.y + 150 && bola.x > jogador.x - 150 && bola.y > jogador.y - 150){
+                        jogadorComBola.push(jogador)
+                        jogador.receber()
+                        console.log(jogador.nome)
+                    } 
+                })
+                console.log(jogadorComBola)
+                if(jogadorComBola.length == 0){
+                    if(time.ladoQuadra == 'direita'){
+                        if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x <= 850){
+                            this.aumentarPontuacao(time)
+                        }else {
+                            this.aumentarPontuacao(outroTime)
+                        }
+                    }else{
+                        if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x >= 850){
+                            this.aumentarPontuacao(time)
+                        } else{
+                            this.aumentarPontuacao(outroTime)
+                        }
+                    }
+                }
+                
+            }
+        },200)
+        
 
     }
 }
