@@ -258,16 +258,32 @@ class Jogador{
     }
     receber(){
         if(timeEsquerda.jogadores.indexOf(this) != -1){
-            if(numeroAleatorio(3) == 0){
-                bola.req = gerarPosReq(1545, 745)
-            }else {
-                bola.req = {x: posicao3Esquerda.x, y: posicao3Esquerda.y}
+            if(this.x == posicao3Esquerda.x && this.y == posicao3Esquerda.y){
+                if(numeroAleatorio(1) == 0){
+                    bola.req = {x: posicao2Esquerda.x, y: posicao2Esquerda.y}
+                } else{
+                    bola.req = {x: posicao4Esquerda.x, y: posicao4Esquerda.y}
+                }
+            }else{
+                if(numeroAleatorio(3) == 0){
+                    bola.req = gerarPosReq(1545, 745)
+                }else {
+                    bola.req = {x: posicao3Esquerda.x, y: posicao3Esquerda.y}
+                }
             }
         }else {
-            if(numeroAleatorio(3) == 0){
-                bola.req = gerarPosReq(1545, 745)
-            }else {
-                bola.req = {x: posicao3Direita.x, y: posicao3Direita.y}
+            if(this.x == posicao3Direita.x && this.y == posicao3Direita.y){
+                if(numeroAleatorio(1) == 0){
+                    bola.req = {x: posicao2Direita.x, y: posicao2Direita.y}
+                } else{
+                    bola.req = {x: posicao4Direita.x, y: posicao4Direita.y}
+                }
+            }else{
+                if(numeroAleatorio(3) == 0){
+                    bola.req = gerarPosReq(1545, 745)
+                }else {
+                    bola.req = {x: posicao3Direita.x, y: posicao3Direita.y}
+                }
             }
         }
     }
@@ -340,6 +356,9 @@ class Jogo{
             time.realizarRodizio()
         }
         this.ultimo_time_a_marcar = time
+        setTimeout(()=>{
+            this.comecarRally(time)
+        },6000)
         //verificaPontos()
     }
     caraoucoroa(){
@@ -353,7 +372,7 @@ class Jogo{
         let outroTime = times.filter(e => {return e != time})
         outroTime = outroTime[0]
         console.log(outroTime)
-        if(timeEsquerda.sets == 0 && timeDireita.sets == 0){
+        if(timeEsquerda.sets == 0 && timeDireita.sets == 0 && timeEsquerda.pontos == 0 && timeDireita.pontos == 0){
             timeDireita.realizarRodizio()
         }
         time.saque()
