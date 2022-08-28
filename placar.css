@@ -1,0 +1,108 @@
+.placar{
+    width: 1000px;
+    height: 80px;
+    background-color: #11152a;
+    color: white;
+    font-size: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transform: translateY(-50%);
+}
+.timeEsquerda , .timeDireita{
+    display: flex;
+    gap: 50px;
+    margin: 0 10px;
+    align-items: center;
+    font-size: 40px;
+    /* font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
+    font-family: Impact, sans-serif;
+}
+.timeEsquerda .cor{
+    background-color: yellow;
+}
+.timeDireita .cor{
+    background-color: red;
+}
+.cor{
+    width: 20px;
+    height: 60px;
+}
+.dados{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.dadosEsquerda, .dadosDireita{
+    display: flex;
+}
+.setsEsquerda, .pontosEsquerda{
+    width: 55px;
+    height: 55px;
+    transform: skew(10deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.setsDireita, .pontosDireita{
+    width: 55px;
+    height: 55px;
+    transform: skew(-10deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.setsEsquerda{
+    width: 45px;
+    height: 45px;
+    border: 5px solid aqua;
+    font-size: 35px;
+    position: relative;
+}
+.setsDireita{
+    width: 45px;
+    height: 45px;
+    border: 5px solid aqua;
+    font-size: 35px;
+    position: relative;
+}
+.setsEsquerda .textSkew, .setsDireita .textSkew{
+    position: absolute;
+    bottom: -5px;
+}
+.sets{
+    font-size: 20px;
+    color: aqua;
+    position: absolute;
+    top: -5px;
+}
+.pontosEsquerda{
+    background-color: aqua;
+    transform: skew(10deg) translateY(-5px);
+    color: #11152a;
+    font-weight: bold;
+    font-family: Impact, sans-serif;
+    font-size: 40px;
+}
+.pontosDireita{
+    background-color: aqua;
+    transform: skew(-10deg) translateY(-5px);
+    color: #11152a;
+    font-weight: bold;
+    font-family: Impact, sans-serif;
+    font-size: 40px;
+}
+.textSkew{
+    transform: skew(-10deg)
+}
+.pontosDireita .textSkew, .setsDireita .textSkew{
+    transform: skew(10deg);
+}
+.logo{
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+    background-color: #000;
+}
