@@ -287,6 +287,13 @@ class Jogador{
             }
         }
     }
+    levantar(){
+        if(timeEsquerda.jogadores.includes(this)){
+            if(numeroAleatorio(3 == 0)){
+                
+            }
+        }
+    }
 }
 
 function gerarPosReq(xnum, ynum){
@@ -368,6 +375,39 @@ class Jogo{
             this.comecarRally(timeDireita)
         }
     }
+    esperarParaRealizar(time, acao){
+        let outroTime = times.filter(e => {return e != time})
+        outroTime = outroTime[0]
+        bola.bolaAndando = true
+            let intervalo = setInterval(() =>{
+                if(bola.bolaAndando == false){
+                    clearInterval(intervalo)
+                    let jogadorComBola = []
+                    outroTime.jogadores.forEach((jogador)=>{
+                        if(bola.x < jogador.x + 150 && bola.y < jogador.y + 150 && bola.x > jogador.x - 150 && bola.y > jogador.y - 150){
+                            jogadorComBola.push(jogador)
+                            jogador[acao]()
+                        }
+                    })
+                    if(jogadorComBola.length == 0){
+                        if(time.ladoQuadra == 'direita'){
+                            if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x <= 850){
+                                this.aumentarPontuacao(time)
+                            }else {
+                                this.aumentarPontuacao(outroTime)
+                            }
+                        }else{
+                            if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x >= 850){
+                                this.aumentarPontuacao(time)
+                            } else{
+                                this.aumentarPontuacao(outroTime)
+                            }
+                        }
+                    }
+                    
+                }
+            },50)
+        }
     comecarRally(time){
         let outroTime = times.filter(e => {return e != time})
         outroTime = outroTime[0]
@@ -376,37 +416,8 @@ class Jogo{
             timeDireita.realizarRodizio()
         }
         time.saque()
-        bola.bolaAndando = true
-        let intervalo = setInterval(() =>{
-            if(bola.bolaAndando == false){
-                clearInterval(intervalo)
-                let jogadorComBola = []
-                outroTime.jogadores.forEach((jogador)=>{
-                    if(bola.x < jogador.x + 150 && bola.y < jogador.y + 150 && bola.x > jogador.x - 150 && bola.y > jogador.y - 150){
-                        jogadorComBola.push(jogador)
-                        jogador.receber()
-                    }
-                })
-                console.log(jogadorComBola)
-                if(jogadorComBola.length == 0){
-                    if(time.ladoQuadra == 'direita'){
-                        if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x <= 850){
-                            this.aumentarPontuacao(time)
-                        }else {
-                            this.aumentarPontuacao(outroTime)
-                        }
-                    }else{
-                        if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x >= 850){
-                            this.aumentarPontuacao(time)
-                        } else{
-                            this.aumentarPontuacao(outroTime)
-                        }
-                    }
-                }
-                
-            }
-        },50)
-        
+        this.esperarParaRealizar(time,'receber')
+        this.esperarParaRealizar(time,'levantar')
 
     }
 }
