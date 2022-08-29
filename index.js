@@ -24,8 +24,8 @@ class Objeto{
     }
     renderSelf(){
         contexto.drawImage(this.imagem, this.x, this.y, this.w, this.h)
-        // contexto.fillStyle = 'red'
-        // contexto.fillRect(850, 780, 100, 100);
+        contexto.fillStyle = 'red'
+        contexto.fillRect(850, 780, 100, 100);
     }
 }
 
@@ -289,9 +289,46 @@ class Jogador{
     }
     levantar(){
         if(timeEsquerda.jogadores.includes(this)){
+            // console.log('esquerda!')
             if(numeroAleatorio(3 == 0)){
-                
+                bola.req = gerarPosReq(1545, 745)
+            }else{
+                if(this.x == posicao4Esquerda.x && this.y == posicao4Esquerda.y){
+                    bola.req = {x: posicao2Esquerda.x, y: posicao2Esquerda.y}
+                }else if (this.x == posicao2Esquerda.x && this.y == posicao2Esquerda.y){
+                    bola.req = {x: posicao4Esquerda.x, y: posicao4Esquerda.y}
+                } else{
+                    if(numeroAleatorio(1)==0){
+                        bola.req = {x: posicao2Esquerda.x, y: posicao2Esquerda.y}
+                    }else{
+                        bola.req = {x: posicao4Esquerda.x, y: posicao4Esquerda.y}
+                    }
+                }
             }
+        }else{
+            // console.log('direita!')
+            if(numeroAleatorio(3 == 0)){
+                bola.req = gerarPosReq(1545, 745)
+            }else{
+                if(this.x == posicao4Direita.x && this.y == posicao4Direita.y){
+                    bola.req = {x: posicao2Direita.x, y: posicao2Direita.y}
+                }else if (this.x == posicao2Direita.x && this.y == posicao2Direita.y){
+                    bola.req = {x: posicao4Direita.x, y: posicao4Direita.y}
+                } else{
+                    if(numeroAleatorio(1)==0){
+                        bola.req = {x: posicao2Direita.x, y: posicao2Direita.y}
+                    }else{
+                        bola.req = {x: posicao4Direita.x, y: posicao4Direita.y}
+                    }
+                }
+            }
+        }
+    }
+    cortar(){
+        if(timeEsquerda.jogadores.includes(this)){
+            bola.req = gerarPosReq(1545,745)
+        }else{
+            bola.req = gerarPosReq(850,745)
         }
     }
 }
@@ -418,6 +455,8 @@ class Jogo{
         time.saque()
         this.esperarParaRealizar(time,'receber')
         this.esperarParaRealizar(time,'levantar')
+        this.esperarParaRealizar(time,'cortar')
+        // this.esperarParaRealizar(time,'bloquear')
 
     }
 }
