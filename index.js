@@ -185,13 +185,13 @@ class Time{
             this.jogadores[2].andarRodizio(posicao4Direita)
             this.jogadores[1].andarRodizio(posicao3Direita)
             this.jogadores[0].andarRodizio(posicao2Direita)
-        } else{
+        } else if (this.ladoQuadra == 'esquerda'){
             this.jogadores[0].andarRodizio(posicao1Esquerda)
-            this.jogadores[1].andarRodizio(posicao6Esquerda)
-            this.jogadores[2].andarRodizio(posicao5Esquerda)
+            this.jogadores[5].andarRodizio(posicao6Esquerda)
+            this.jogadores[4].andarRodizio(posicao5Esquerda)
             this.jogadores[3].andarRodizio(posicao4Esquerda)
-            this.jogadores[4].andarRodizio(posicao3Esquerda)
-            this.jogadores[5].andarRodizio(posicao2Esquerda)
+            this.jogadores[2].andarRodizio(posicao3Esquerda)
+            this.jogadores[1].andarRodizio(posicao2Esquerda)
         }
     }
     saque(){
@@ -333,7 +333,7 @@ const random5 = new Jogador("Random5", imagemRandons, posicao5Esquerda)
 const random6 = new Jogador("Random6", imagemRandons, posicao6Esquerda)
 
 timeDireita = new Time('Araquamanos',[born, velho, gustavo, amanda, nicolas, lip], 'direita')
-timeEsquerda = new Time('RandomsPlays',[random1, random6, random5, random4, random3, random2], 'esquerda')
+timeEsquerda = new Time('RandomsPlays',[random1, random2, random3, random4, random5, random6], 'esquerda')
 times = [timeEsquerda, timeDireita]
 
 function numeroAleatorio(range){
@@ -385,8 +385,7 @@ class Jogo{
                     if(bola.x < jogador.x + 150 && bola.y < jogador.y + 150 && bola.x > jogador.x - 150 && bola.y > jogador.y - 150){
                         jogadorComBola.push(jogador)
                         jogador.receber()
-                        console.log(jogador.nome)
-                    } 
+                    }
                 })
                 console.log(jogadorComBola)
                 if(jogadorComBola.length == 0){
@@ -406,7 +405,7 @@ class Jogo{
                 }
                 
             }
-        },200)
+        },50)
         
 
     }
