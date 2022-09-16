@@ -82,6 +82,7 @@ class ObjetoBola extends Objeto{
     verificaBolaAndando(){
         if(this.x == this.req.x && this.y == this.req.y){
             this.bolaAndando = false
+            jogo.logica()
         }else{
             this.bolaAndando = true
         }
@@ -386,6 +387,7 @@ function numeroAleatorio(range){
 
 class Jogo{
     ultimo_time_a_marcar = null
+    time_que_sacou = null
     constructor(timeEsquerda, timeDireita){
         if(!(timeEsquerda instanceof Time) || !(timeDireita instanceof Time)){
             throw new Error('Os times devem ser uma instancia da classe Time')
@@ -394,6 +396,32 @@ class Jogo{
             timeDireita = timeDireita
         }
     }
+    logica(){
+        if(!bola.bolaAndando){ // Verifica se a bola está parada
+            let jogadorDaEsquerda = this.bolaComJogador(timeEsquerda)
+            let jogadorDaDireita = this.bolaComJogador(timeDireita)
+            if(jogadorDaEsquerda){ // Verifica se a bola está com algum jogador no time da Esquerda
+                console.log('Timasso da esquerda pa', jogadorDaEsquerda.nome)
+            }else if(jogadorDaDireita){ // Verifica se a bola está com algum jogador no time da Direita
+                console.log('Timasso da direita meu', jogadorDaDireita.nome)
+            }else{ // Verifica se a bola está no chão
+                console.log('No chão, paia')
+            }
+        }
+    }
+    bolaComJogador(time){
+        let jogagadorzasso
+        time.jogadores.forEach(jogador=>{
+            if(bola.x < jogador.x + 150 && bola.y < jogador.y + 150 && bola.x > jogador.x - 150 && bola.y > jogador.y - 150){
+                // console.log(jogador.nome, time.ladoQuadra)
+                jogagadorzasso = jogador
+            }
+        })
+        return jogagadorzasso
+    }
+
+
+
     aumentarPontuacao(time){
         time.pontos += 1
         if(this.ultimo_time_a_marcar != time){
@@ -407,8 +435,10 @@ class Jogo{
     }
     caraoucoroa(){
         if(numeroAleatorio(1) == 0){
+            this.time_que_sacou = timeEsquerda
             this.comecarRally(timeEsquerda)
         }else {
+            this.time_que_sacou = timeDireita
             this.comecarRally(timeDireita)
         }
     }
@@ -454,8 +484,8 @@ class Jogo{
         }
         time.saque()
         this.esperarParaRealizar(time,'receber')
-        this.esperarParaRealizar(time,'levantar')
-        this.esperarParaRealizar(time,'cortar')
+        // this.esperarParaRealizar(time,'levantar')
+        // this.esperarParaRealizar(time,'cortar')
         // this.esperarParaRealizar(time,'bloquear')
 
     }
