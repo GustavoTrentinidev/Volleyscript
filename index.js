@@ -170,11 +170,27 @@ gameLoop()
 class Time{
     sets = 0
     pontos = 0
+    num_jogada = 1
     constructor(nome, jogadores, ladoQuadra){
         this.nome = nome
         this.jogadores = jogadores
         this.ladoQuadra = ladoQuadra
+        if(ladoQuadra == 'direita'){
+            this.displayPontos = document.getElementById('pontosDireita')
+            this.displaySet = document.getElementById('setsDireita')
+        }else{
+            this.displayPontos = document.getElementById('pontosEsquerda')
+            this.displaySet = document.getElementById('setsEsquerda')
+        }
+        console.log(this.displayPontos,this.displaySet)
     }
+
+    set displayPontosTime(pontuacao){
+        console.log(this.pontos , pontuacao)
+        this.pontos = pontuacao
+        this.displayPontos.innerHTML = this.pontos
+    }
+
     realizarRodizio(){
         let index0 = this.jogadores[0]
         this.jogadores.splice(0,1)
@@ -253,8 +269,10 @@ class Jogador{
     sacar(){
         if(timeEsquerda.jogadores.indexOf(this)){
             bola.req = gerarPosReq(1545, 745)
+            jogo.ultimo_time_a_tocar_na_bola = timeEsquerda
         }else{
             bola.req = gerarPosReq(1545, 745)
+            jogo.ultimo_time_a_tocar_na_bola = timeDireita
         }
     }
     receber(){
@@ -388,6 +406,7 @@ function numeroAleatorio(range){
 class Jogo{
     ultimo_time_a_marcar = null
     time_que_sacou = null
+    ultimo_time_a_tocar_na_bola = null
     constructor(timeEsquerda, timeDireita){
         if(!(timeEsquerda instanceof Time) || !(timeDireita instanceof Time)){
             throw new Error('Os times devem ser uma instancia da classe Time')
@@ -406,6 +425,15 @@ class Jogo{
                 console.log('Timasso da direita meu', jogadorDaDireita.nome)
             }else{ // Verifica se a bola está no chão
                 console.log('No chão, paia')
+                if(this.ultimo_time_a_tocar_na_bola == timeDireita){
+                    if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x <= 850){ //Verifica se a bola caiu do lado esquerdo
+                        //this.aumentarPontuacao(timeDireita)
+                    }
+                }else{
+                    if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x >= 850){ //Verifica se a bola caiu do lado direito
+                        //this.aumentarPontuacao(timeEsquerda)
+                    }
+                }
             }
         }
     }
@@ -423,7 +451,8 @@ class Jogo{
 
 
     aumentarPontuacao(time){
-        time.pontos += 1
+        time.displayPontosTime = time.pontos + 1
+        
         if(this.ultimo_time_a_marcar != time){
             time.realizarRodizio()
         }
