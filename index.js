@@ -85,6 +85,7 @@ class ObjetoBola extends Objeto{
             jogo.logica()
         }else{
             this.bolaAndando = true
+            jogo.limitadorDaLogica = 0
         }
     }
     atualizaPosicao(req){
@@ -407,6 +408,7 @@ class Jogo{
     ultimo_time_a_marcar = null
     time_que_sacou = null
     ultimo_time_a_tocar_na_bola = null
+    limitadorDaLogica = 0 // Permite que o método logica() rode apenas UMA vez ao parar da bola!
     constructor(timeEsquerda, timeDireita){
         if(!(timeEsquerda instanceof Time) || !(timeDireita instanceof Time)){
             throw new Error('Os times devem ser uma instancia da classe Time')
@@ -416,26 +418,33 @@ class Jogo{
         }
     }
     logica(){
-        if(!bola.bolaAndando){ // Verifica se a bola está parada
-            let jogadorDaEsquerda = this.bolaComJogador(timeEsquerda)
-            let jogadorDaDireita = this.bolaComJogador(timeDireita)
-            if(jogadorDaEsquerda){ // Verifica se a bola está com algum jogador no time da Esquerda
-                console.log('Timasso da esquerda pa', jogadorDaEsquerda.nome)
-            }else if(jogadorDaDireita){ // Verifica se a bola está com algum jogador no time da Direita
-                console.log('Timasso da direita meu', jogadorDaDireita.nome)
-            }else{ // Verifica se a bola está no chão
-                console.log('No chão, paia')
-                if(this.ultimo_time_a_tocar_na_bola == timeDireita){
-                    if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x <= 850){ //Verifica se a bola caiu do lado esquerdo
-                        //this.aumentarPontuacao(timeDireita)
-                    }
-                }else{
-                    if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x >= 850){ //Verifica se a bola caiu do lado direito
-                        //this.aumentarPontuacao(timeEsquerda)
+        if(this.limitadorDaLogica == 0){
+            if(!bola.bolaAndando){ // Verifica se a bola está parada
+                let jogadorDaEsquerda = this.bolaComJogador(timeEsquerda)
+                let jogadorDaDireita = this.bolaComJogador(timeDireita)
+                if(jogadorDaEsquerda){ // Verifica se a bola está com algum jogador no time da Esquerda
+                    console.log('Timasso da esquerda pa', jogadorDaEsquerda.nome)
+                }else if(jogadorDaDireita){ // Verifica se a bola está com algum jogador no time da Direita
+                    console.log('Timasso da direita meu', jogadorDaDireita.nome)
+                }else{ // Verifica se a bola está no chão
+                    console.log('No chão, paia')
+                    if(this.ultimo_time_a_tocar_na_bola == timeDireita){
+                        if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x <= 850){ //Verifica se a bola caiu do lado esquerdo
+                            this.aumentarPontuacao(timeDireita)
+                        } else{
+                            this.aumentarPontuacao(timeEsquerda)
+                        }
+                    }else{
+                        if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x >= 850){ //Verifica se a bola caiu do lado direito
+                            this.aumentarPontuacao(timeEsquerda)
+                        }else {
+                            this.aumentarPontuacao(timeDireita)
+                        }
                     }
                 }
             }
         }
+        this.limitadorDaLogica = 1
     }
     bolaComJogador(time){
         let jogagadorzasso
@@ -471,39 +480,6 @@ class Jogo{
             this.comecarRally(timeDireita)
         }
     }
-    esperarParaRealizar(time, acao){
-        let outroTime = times.filter(e => {return e != time})
-        outroTime = outroTime[0]
-        bola.bolaAndando = true
-            let intervalo = setInterval(() =>{
-                if(bola.bolaAndando == false){
-                    clearInterval(intervalo)
-                    let jogadorComBola = []
-                    outroTime.jogadores.forEach((jogador)=>{
-                        if(bola.x < jogador.x + 150 && bola.y < jogador.y + 150 && bola.x > jogador.x - 150 && bola.y > jogador.y - 150){
-                            jogadorComBola.push(jogador)
-                            jogador[acao]()
-                        }
-                    })
-                    if(jogadorComBola.length == 0){
-                        if(time.ladoQuadra == 'direita'){
-                            if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x <= 850){
-                                this.aumentarPontuacao(time)
-                            }else {
-                                this.aumentarPontuacao(outroTime)
-                            }
-                        }else{
-                            if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x >= 850){
-                                this.aumentarPontuacao(time)
-                            } else{
-                                this.aumentarPontuacao(outroTime)
-                            }
-                        }
-                    }
-                    
-                }
-            },50)
-        }
     comecarRally(time){
         let outroTime = times.filter(e => {return e != time})
         outroTime = outroTime[0]
@@ -512,11 +488,6 @@ class Jogo{
             timeDireita.realizarRodizio()
         }
         time.saque()
-        this.esperarParaRealizar(time,'receber')
-        // this.esperarParaRealizar(time,'levantar')
-        // this.esperarParaRealizar(time,'cortar')
-        // this.esperarParaRealizar(time,'bloquear')
-
     }
 }
 
