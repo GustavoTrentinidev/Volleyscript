@@ -264,7 +264,7 @@ class Jogador{
                 this.y = novaposicao.y
                 clearInterval(intervalo) 
             }
-        }, 10)
+        })
     }
     sacar(){
         if(timeEsquerda.jogadores.indexOf(this)){
