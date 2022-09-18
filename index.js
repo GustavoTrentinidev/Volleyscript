@@ -183,7 +183,6 @@ class Time{
             this.displayPontos = document.getElementById('pontosEsquerda')
             this.displaySet = document.getElementById('setsEsquerda')
         }
-        console.log(this.displayPontos,this.displaySet)
     }
 
     set displayPontosTime(pontuacao){
@@ -405,6 +404,7 @@ function numeroAleatorio(range){
 }
 
 class Jogo{
+    jogo_jogada = 0
     ultimo_time_a_marcar = null
     time_que_sacou = null
     ultimo_time_a_tocar_na_bola = null
@@ -423,11 +423,61 @@ class Jogo{
                 let jogadorDaEsquerda = this.bolaComJogador(timeEsquerda)
                 let jogadorDaDireita = this.bolaComJogador(timeDireita)
                 if(jogadorDaEsquerda){ // Verifica se a bola está com algum jogador no time da Esquerda
-                    console.log('Timasso da esquerda pa', jogadorDaEsquerda.nome)
+                    console.log(jogadorDaEsquerda.nome)
+                    if(this.ultimo_time_a_tocar_na_bola != timeEsquerda && timeEsquerda.num_jogada == 4){
+                        timeEsquerda.num_jogada = 1  
+                    }
+                    if(this.jogo_jogada > 1 || this.time_que_sacou != timeEsquerda){
+                        if(timeEsquerda.num_jogada == 1){
+                            jogadorDaEsquerda.receber()
+                            timeEsquerda.num_jogada += 1
+                            this.jogo_jogada += 1
+                            this.ultimo_time_a_tocar_na_bola = timeEsquerda
+                        }else if (timeEsquerda.num_jogada == 2){
+                            jogadorDaEsquerda.levantar()
+                            timeEsquerda.num_jogada += 1
+                            this.jogo_jogada += 1
+                            this.ultimo_time_a_tocar_na_bola = timeEsquerda
+                        } else if (timeEsquerda.num_jogada == 3){
+                            jogadorDaEsquerda.cortar()
+                            timeEsquerda.num_jogada += 1
+                            this.jogo_jogada += 1
+                            this.ultimo_time_a_tocar_na_bola = timeEsquerda
+                        } else{ 
+                            this.aumentarPontuacao(timeDireita)
+                        }
+                    }else{
+                        this.aumentarPontuacao(timeDireita)
+                    }
                 }else if(jogadorDaDireita){ // Verifica se a bola está com algum jogador no time da Direita
-                    console.log('Timasso da direita meu', jogadorDaDireita.nome)
+                    console.log(jogadorDaDireita.nome)
+                    if(this.ultimo_time_a_tocar_na_bola != timeDireita && timeDireita.num_jogada == 4){
+                        timeDireita.num_jogada = 1  
+                    }
+                    if(this.jogo_jogada > 1 || this.time_que_sacou != timeDireita){
+                        if(timeDireita.num_jogada == 1){
+                            jogadorDaDireita.receber()
+                            timeDireita.num_jogada += 1
+                            this.jogo_jogada += 1
+                            this.ultimo_time_a_tocar_na_bola = timeDireita
+                        }else if (timeDireita.num_jogada == 2){
+                            jogadorDaDireita.levantar()
+                            timeDireita.num_jogada += 1
+                            this.jogo_jogada += 1
+                            this.ultimo_time_a_tocar_na_bola = timeDireita
+                        } else if (timeDireita.num_jogada == 3){
+                            jogadorDaDireita.cortar()
+                            timeDireita.num_jogada += 1
+                            this.jogo_jogada += 1
+                            this.ultimo_time_a_tocar_na_bola = timeDireita
+                        } else {
+                            this.aumentarPontuacao(timeEsquerda)
+                        }
+                    } else{
+                        this.aumentarPontuacao(timeEsquerda)
+                    }
                 }else{ // Verifica se a bola está no chão
-                    console.log('No chão, paia')
+                    console.log('No chão')
                     if(this.ultimo_time_a_tocar_na_bola == timeDireita){
                         if(bola.x > 100 && bola.y > 120 && bola.y < 780 && bola.x <= 850){ //Verifica se a bola caiu do lado esquerdo
                             this.aumentarPontuacao(timeDireita)
@@ -466,6 +516,7 @@ class Jogo{
             time.realizarRodizio()
         }
         this.ultimo_time_a_marcar = time
+        this.time_que_sacou = null
         setTimeout(()=>{
             this.comecarRally(time)
         },6000)
@@ -481,13 +532,16 @@ class Jogo{
         }
     }
     comecarRally(time){
-        let outroTime = times.filter(e => {return e != time})
-        outroTime = outroTime[0]
-        console.log(outroTime)
+        this.jogo_jogada = 0
+        timeDireita.num_jogada = 1
+        timeEsquerda.num_jogada = 1
         if(timeEsquerda.sets == 0 && timeDireita.sets == 0 && timeEsquerda.pontos == 0 && timeDireita.pontos == 0){
             timeDireita.realizarRodizio()
         }
         time.saque()
+        this.jogo_jogada += 1
+        this.time_que_sacou = time
+        this.ultimo_time_a_tocar_na_bola = time
     }
 }
 
