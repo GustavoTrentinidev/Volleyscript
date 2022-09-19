@@ -24,8 +24,8 @@ class Objeto{
     }
     renderSelf(){
         contexto.drawImage(this.imagem, this.x, this.y, this.w, this.h)
-        contexto.fillStyle = 'red'
-        contexto.fillRect(850, 780, 100, 100);
+        // contexto.fillStyle = 'red'
+        // contexto.fillRect(850, 780, 100, 100);
     }
 }
 
@@ -76,12 +76,15 @@ posicao1Direita, posicao6Direita, posicao5Direita, posicao4Direita, posicao3Dire
 class ObjetoBola extends Objeto{
     req = {}
     bolaAndando = false
+    primeiroMovimento = 0
+    posicaoInicial = {}
     constructor(imagem,x,y,w,h){
         super(imagem,x,y,w,h)
     }
     verificaBolaAndando(){
         if(this.x == this.req.x && this.y == this.req.y){
             this.bolaAndando = false
+            this.primeiroMovimento = 0
             jogo.logica()
         }else{
             this.bolaAndando = true
@@ -89,6 +92,37 @@ class ObjetoBola extends Objeto{
         }
     }
     atualizaPosicao(req){
+        if(this.primeiroMovimento == 0){
+            this.posicaoInicial = {x: this.x, y: this.y}
+        }
+        let diferencaDoX = this.posicaoInicial.x - req.x
+        let diferencaDoY = this.posicaoInicial.y - req.y
+        let multiplicador
+        if(diferencaDoX > diferencaDoY){
+            multiplicador = diferencaDoX / diferencaDoY
+        } else{
+            multiplicador = diferencaDoY / diferencaDoX
+        }
+        if(multiplicador < 0){
+            multiplicador *= -1
+        }
+        // console.log(multiplicador)
+        // console.log(this.posicaoInicial)
+
+        // if(this.x != req.x){
+        //     if(this.x < req.x){
+        //         this.x = this.x + multiplicador
+        //     }else{
+        //         this.x = this.x - multiplicador
+        //     }
+        // }
+        // if(this.y != req.y){
+        //     if(this.y < req.y){
+        //         this.y = this.y + multiplicador
+        //     }else {
+        //         this.y = this.y - multiplicador
+        //     }
+        // }
         if(this.x != req.x){
             if(this.x < req.x){
                 this.x = this.x + 10
@@ -103,6 +137,7 @@ class ObjetoBola extends Objeto{
                 this.y = this.y - 5
             }
         }
+        this.primeiroMovimento += 1
     }
 }
 
