@@ -95,8 +95,27 @@ class ObjetoBola extends Objeto{
         if(this.primeiroMovimento == 0){
             this.posicaoInicial = {x: this.x, y: this.y}
         }
-        let diferencaDoX = this.posicaoInicial.x - req.x
-        let diferencaDoY = this.posicaoInicial.y - req.y
+        
+        let diferencaDoX = req.x - this.posicaoInicial.x
+        let diferencaDoY = req.y - this.posicaoInicial.y
+        let diferencaDoXAtual = this.x - this.posicaoInicial.x
+        if (diferencaDoXAtual < 0){
+            diferencaDoXAtual *= -1
+        }
+        if (diferencaDoX < 0){
+            diferencaDoX *= -1
+        }
+        if (diferencaDoY < 0){
+            diferencaDoY *= -1
+        }
+
+        let tan = diferencaDoY/diferencaDoX
+        
+        
+        
+        let dist = tan * diferencaDoXAtual
+        
+        
         let multiplicador
         if(diferencaDoX > diferencaDoY){
             multiplicador = diferencaDoX / diferencaDoY
@@ -106,8 +125,20 @@ class ObjetoBola extends Objeto{
         if(multiplicador < 0){
             multiplicador *= -1
         }
-        // console.log(multiplicador)
-        // console.log(this.posicaoInicial)
+        console.log('Resultado do multiplicador: ', multiplicador)
+        console.log('Posição de saída: ',this.posicaoInicial)
+        console.log('Posição de ida: ', req)
+        console.log("Tangente", tan)
+
+        console.log("Diferença X", diferencaDoX)
+        console.log("Diferença Y", diferencaDoY)
+        console.log("Dist x:", diferencaDoXAtual)
+        console.log("dist y:", dist)
+
+        console.log("X:", this.x)
+        console.log("Y:", this.y)
+
+        
 
         // if(this.x != req.x){
         //     if(this.x < req.x){
@@ -123,21 +154,62 @@ class ObjetoBola extends Objeto{
         //         this.y = this.y - multiplicador
         //     }
         // }
+        
+
+        // if(this.x != req.x && this.y != req.y){
+        //     if(this.x < req.x && this.y < req.y){
+        //         this.x = this.x + multiplicador
+        //         this.y = this.y + multiplicador 
+        //     }else if (this.x > req.x && this.y > req.y){
+        //         this.x = this.x - multiplicador
+        //         this.y = this.y - multiplicador 
+        //     } else if (this.x > req.x && this.y < req.y){
+        //         this.x = this.x - multiplicador
+        //         this.y = this.y + multiplicador 
+        //     } else if(this.x < req.x && this.y > req.y){
+        //         this.x = this.x + multiplicador
+        //         this.y = this.y - multiplicador 
+        //     }
+        // }
+
         if(this.x != req.x){
-            if(this.x < req.x){
-                this.x = this.x + 10
-            }else{
-                this.x = this.x - 10
+            if(this.x < req.x && this.y < req.y){
+                this.x += 5
+                this.y = this.posicaoInicial.y + dist 
+            }
+            else if(this.x < req.x && this.y > req.y){
+                this.x += 5
+                this.y = this.posicaoInicial.y - dist 
+            }
+            else if (this.x > req.x && this.y < req.y){
+                this.x -= 5
+                this.y = this.posicaoInicial.y + dist 
+            }
+            else if (this.x > req.x && this.y > req.y){
+                this.x -= 5
+                this.y = this.posicaoInicial.y - dist 
             }
         }
-        if(this.y != req.y){
-            if(this.y < req.y){
-                this.y = this.y + 5
-            }else {
-                this.y = this.y - 5
-            }
-        }
+
+        // if(this.x != req.x){
+        //     if(this.x < req.x){
+        //         this.x = this.x + 10
+        //     }else{
+        //         this.x = this.x - 10
+        //     }
+        // }
+        // if(this.y != req.y){
+        //     if(this.y < req.y){
+        //         this.y = this.y + 5
+        //     }else {
+        //         this.y = this.y - 5
+        //     }
+        // }
+
+
         this.primeiroMovimento += 1
+
+        
     }
 }
 
