@@ -190,6 +190,10 @@ class ObjetoBola extends Objeto{
                 this.y = this.posicaoInicial.y - dist 
             }
         }
+        else {
+            this.y = req.y
+        }
+
 
         // if(this.x != req.x){
         //     if(this.x < req.x){
