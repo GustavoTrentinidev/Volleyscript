@@ -305,25 +305,88 @@ class Jogador{
     }
     andarRodizio(novaposicao){
         let intervalo = setInterval(() => {
-            if(this.x != novaposicao.x || this.y != novaposicao.y){
-                if(this.x != novaposicao.x){
-                    if(this.x > novaposicao.x){
-                        this.x -= 1
-                    }else{
-                        this.x += 1
+            if(timeDireita.jogadores.includes(this)){
+                if(this.x < novaposicao.x){
+                    if(this.x != novaposicao.x){
+                        if(this.x > novaposicao.x){
+                            this.x -= 1
+                        }else{
+                            this.x += 1
+                        }               
+                    }
+                    else if(this.y != novaposicao.y){
+                        if(this.y> novaposicao.y){
+                            this.y -= 1
+                        }else{
+                            this.y += 1
+                        }
+                    }
+                    else {
+                        this.x = novaposicao.x
+                        this.y = novaposicao.y
+                        clearInterval(intervalo) 
+                    }
+                }else{
+                    if(this.y != novaposicao.y){
+                        if(this.y> novaposicao.y){
+                            this.y -= 1
+                        }else{
+                            this.y += 1
+                        }
+                    }else if(this.x != novaposicao.x){
+                        if(this.x > novaposicao.x){
+                            this.x -= 1
+                        }else{
+                            this.x += 1
+                        }               
+                    }
+                    else {
+                        this.x = novaposicao.x
+                        this.y = novaposicao.y
+                        clearInterval(intervalo) 
                     }
                 }
-                if(this.y != novaposicao.y){
-                    if(this.y> novaposicao.y){
-                        this.y -= 1
-                    }else{
-                        this.y += 1
+            }else{
+                if(this.x > novaposicao.x){
+                    if(this.x != novaposicao.x){
+                        if(this.x > novaposicao.x){
+                            this.x -= 1
+                        }else{
+                            this.x += 1
+                        }               
+                    }
+                    else if(this.y != novaposicao.y){
+                        if(this.y> novaposicao.y){
+                            this.y -= 1
+                        }else{
+                            this.y += 1
+                        }
+                    }
+                    else {
+                        this.x = novaposicao.x
+                        this.y = novaposicao.y
+                        clearInterval(intervalo) 
+                    }
+                }else{
+                    if(this.y != novaposicao.y){
+                        if(this.y> novaposicao.y){
+                            this.y -= 1
+                        }else{
+                            this.y += 1
+                        }
+                    }else if(this.x != novaposicao.x){
+                        if(this.x > novaposicao.x){
+                            this.x -= 1
+                        }else{
+                            this.x += 1
+                        }               
+                    }
+                    else {
+                        this.x = novaposicao.x
+                        this.y = novaposicao.y
+                        clearInterval(intervalo) 
                     }
                 }
-            }else {
-                this.x = novaposicao.x
-                this.y = novaposicao.y
-                clearInterval(intervalo) 
             }
         })
     }
