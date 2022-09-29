@@ -300,11 +300,34 @@ class Jogador{
         this.x = posicao.x
         this.y = posicao.y
     }
+    spriteMovement = {sx:0,sy:0}
+    movements = [
+        {sx:0,sy:0}, // Parado [0]
+        {sx:380,sy:0}, // Manchete [1]
+        {sx:380,sy:100}, // Toque [2]
+        {sx:380,sy:200}, // Corte [3]
+        {sx:380,sy:300}, // Saque [4]
+        {sx:120,sy:200}, // Passo 1 [5]
+        {sx:250,sy:200}, // Passo 2 [6]
+    ]
     renderSelf(){
-        contexto.drawImage(this.imagem, this.x, this.y, 100, 100)
+        contexto.drawImage(this.imagem, this.spriteMovement.sx, this.spriteMovement.sy, 100, 100, this.x, this.y, 100, 100)
+    }
+    mudarSpriteJogada(spritePosicaoJogada){
+        this.spriteMovement = spritePosicaoJogada
+        setTimeout(()=>{
+            this.spriteMovement = this.movements[0]
+        },500)
     }
     andarRodizio(novaposicao){
+        let passos = true
         let intervalo = setInterval(() => {
+            if(passos){
+                this.mudarSpriteJogada(this.movements[5])
+            }else {
+                this.mudarSpriteJogada(this.movements[6])
+            }
+            passos = !passos
             if(timeDireita.jogadores.includes(this)){
                 if(this.x < novaposicao.x){
                     if(this.x != novaposicao.x){
@@ -391,6 +414,7 @@ class Jogador{
         })
     }
     sacar(){
+        this.mudarSpriteJogada(this.movements[4])
         if(timeEsquerda.jogadores.indexOf(this)){
             bola.req = gerarPosReq(1545, 745)
             jogo.ultimo_time_a_tocar_na_bola = timeEsquerda
@@ -400,6 +424,7 @@ class Jogador{
         }
     }
     receber(){
+        this.mudarSpriteJogada(this.movements[1])
         if(timeEsquerda.jogadores.indexOf(this) != -1){
             if(this.x == posicao3Esquerda.x && this.y == posicao3Esquerda.y){
                 if(numeroAleatorio(1) == 0){
@@ -431,6 +456,7 @@ class Jogador{
         }
     }
     levantar(){
+        this.mudarSpriteJogada(this.movements[2])
         if(timeEsquerda.jogadores.includes(this)){
             // console.log('esquerda!')
             if(numeroAleatorio(3 == 0)){
@@ -468,6 +494,7 @@ class Jogador{
         }
     }
     cortar(){
+        this.mudarSpriteJogada(this.movements[3])
         if(timeEsquerda.jogadores.includes(this)){
             bola.req = gerarPosReq(1545,745)
         }else{
@@ -510,7 +537,7 @@ const nicolas = new Jogador("Nicolas", imagemNicolas, posicao5Direita)
 const lip = new Jogador("Lip", imagemLip, posicao6Direita)
 
 const imagemRandons = new Image()
-imagemRandons.src = "./images/jogadores/jopinguim.jpg"
+imagemRandons.src = "./images/jogadores/LIPASCERTO.png"
 
 const random1 = new Jogador("Random1", imagemRandons, posicao1Esquerda)
 const random2 = new Jogador("Random2", imagemRandons, posicao2Esquerda)
