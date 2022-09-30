@@ -312,7 +312,7 @@ class Jogador{
         {sx:120,sy:200}, // Passo Direita 1 [5]
         {sx:250,sy:200}, // Passo Direita 2 [6]
         {sx:120,sy:300}, // Passo Esquerda 1 [7]
-        {sx:250,sy:300}, // Passo Esquerda 2 [8]
+        {sx:240,sy:300}, // Passo Esquerda 2 [8]
         {sx:120,sy:100}, // Passo Cima 1 [9]
         {sx:250,sy:100}, // Passo Cima 2 [10]
         {sx:120,sy:0}, // Passo Baixo 1 [11]
