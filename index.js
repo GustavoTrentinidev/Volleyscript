@@ -300,6 +300,8 @@ class Jogador{
         this.x = posicao.x
         this.y = posicao.y
     }
+    posicaoAntesDeAndar = {}
+    primeiroMovimento = true
     spriteMovement = {sx:0,sy:0}
     movements = [
         {sx:0,sy:0}, // Parado [0]
@@ -307,8 +309,15 @@ class Jogador{
         {sx:380,sy:100}, // Toque [2]
         {sx:380,sy:200}, // Corte [3]
         {sx:380,sy:300}, // Saque [4]
-        {sx:120,sy:200}, // Passo 1 [5]
-        {sx:250,sy:200}, // Passo 2 [6]
+        {sx:120,sy:200}, // Passo Direita 1 [5]
+        {sx:250,sy:200}, // Passo Direita 2 [6]
+        {sx:120,sy:300}, // Passo Esquerda 1 [7]
+        {sx:250,sy:300}, // Passo Esquerda 2 [8]
+        {sx:120,sy:100}, // Passo Cima 1 [9]
+        {sx:250,sy:100}, // Passo Cima 2 [10]
+        {sx:120,sy:0}, // Passo Baixo 1 [11]
+        {sx:250,sy:0}, // Passo Baixo 2 [12]    
+
     ]
     renderSelf(){
         contexto.drawImage(this.imagem, this.spriteMovement.sx, this.spriteMovement.sy, 100, 100, this.x, this.y, 100, 100)
@@ -319,28 +328,45 @@ class Jogador{
             this.spriteMovement = this.movements[0]
         },500)
     }
+    passos = true
+    mudarSpritesAndada(movimento1, movimento2){
+            if(this.passos){
+                this.spriteMovement = movimento1
+            } else{
+                this.spriteMovement = movimento2
+            }
+        this.passos = !this.passos
+    }
     andarRodizio(novaposicao){
+        if(this.primeiroMovimento){
+            this.posicaoAntesDeAndar = {x:this.x, y: this.y}
+            this.primeiroMovimento = false
+            console.log(this.posicaoAntesDeAndar)
+        }
         let passos = true
         let intervalo = setInterval(() => {
             if(passos){
-                this.mudarSpriteJogada(this.movements[5])
+                this.spriteMovement = this.movements[11]
             }else {
-                this.mudarSpriteJogada(this.movements[6])
+                this.spriteMovement = this.movements[12]
             }
-            passos = !passos
             if(timeDireita.jogadores.includes(this)){
                 if(this.x < novaposicao.x){
                     if(this.x != novaposicao.x){
                         if(this.x > novaposicao.x){
+                            this.mudarSpritesAndada(this.movements[7],this.movements[8])
                             this.x -= 1
                         }else{
+                            this.mudarSpritesAndada(this.movements[5],this.movements[6])
                             this.x += 1
                         }               
                     }
                     else if(this.y != novaposicao.y){
                         if(this.y> novaposicao.y){
                             this.y -= 1
+                            this.mudarSpritesAndada(this.movements[9],this.movements[10])
                         }else{
+                            this.mudarSpritesAndada(this.movements[11],this.movements[12])
                             this.y += 1
                         }
                     }
@@ -348,18 +374,24 @@ class Jogador{
                         this.x = novaposicao.x
                         this.y = novaposicao.y
                         clearInterval(intervalo) 
+                        this.primeiroMovimento = true
+                        this.spriteMovement = this.movements[0]
                     }
                 }else{
                     if(this.y != novaposicao.y){
                         if(this.y> novaposicao.y){
+                            this.mudarSpritesAndada(this.movements[9],this.movements[10])
                             this.y -= 1
                         }else{
+                            this.mudarSpritesAndada(this.movements[11],this.movements[12])
                             this.y += 1
                         }
                     }else if(this.x != novaposicao.x){
                         if(this.x > novaposicao.x){
+                            this.mudarSpritesAndada(this.movements[7],this.movements[8])
                             this.x -= 1
                         }else{
+                            this.mudarSpritesAndada(this.movements[5],this.movements[6])
                             this.x += 1
                         }               
                     }
@@ -367,21 +399,27 @@ class Jogador{
                         this.x = novaposicao.x
                         this.y = novaposicao.y
                         clearInterval(intervalo) 
+                        this.primeiroMovimento = true
+                        this.spriteMovement = this.movements[0]
                     }
                 }
             }else{
                 if(this.x > novaposicao.x){
                     if(this.x != novaposicao.x){
                         if(this.x > novaposicao.x){
+                            this.mudarSpritesAndada(this.movements[7],this.movements[8])
                             this.x -= 1
                         }else{
+                            this.mudarSpritesAndada(this.movements[5],this.movements[6])
                             this.x += 1
                         }               
                     }
                     else if(this.y != novaposicao.y){
                         if(this.y> novaposicao.y){
+                            this.mudarSpritesAndada(this.movements[9],this.movements[10])
                             this.y -= 1
                         }else{
+                            this.mudarSpritesAndada(this.movements[11],this.movements[12])
                             this.y += 1
                         }
                     }
@@ -389,18 +427,24 @@ class Jogador{
                         this.x = novaposicao.x
                         this.y = novaposicao.y
                         clearInterval(intervalo) 
+                        this.primeiroMovimento = true
+                        this.spriteMovement = this.movements[0]
                     }
                 }else{
                     if(this.y != novaposicao.y){
                         if(this.y> novaposicao.y){
+                            this.mudarSpritesAndada(this.movements[9],this.movements[10])
                             this.y -= 1
                         }else{
+                            this.mudarSpritesAndada(this.movements[11],this.movements[12])
                             this.y += 1
                         }
                     }else if(this.x != novaposicao.x){
                         if(this.x > novaposicao.x){
+                            this.mudarSpritesAndada(this.movements[7],this.movements[8])
                             this.x -= 1
                         }else{
+                            this.mudarSpritesAndada(this.movements[5],this.movements[6])
                             this.x += 1
                         }               
                     }
@@ -408,6 +452,8 @@ class Jogador{
                         this.x = novaposicao.x
                         this.y = novaposicao.y
                         clearInterval(intervalo) 
+                        this.primeiroMovimento = true
+                        this.spriteMovement = this.movements[0]
                     }
                 }
             }
