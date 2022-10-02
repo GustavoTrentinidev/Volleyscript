@@ -305,10 +305,10 @@ class Jogador{
     spriteMovement = {sx:0,sy:0}
     movements = [
         {sx:0,sy:0}, // Parado [0]
-        {sx:380,sy:0}, // Manchete [1]
-        {sx:380,sy:100}, // Toque [2]
-        {sx:380,sy:200}, // Corte [3]
-        {sx:380,sy:300}, // Saque [4]
+        {sx:380,sy:0}, // Manchete direita [1]
+        {sx:380,sy:100}, // Toque direita [2]
+        {sx:380,sy:200}, // Corte direita [3]
+        {sx:380,sy:300}, // Saque direita [4]
         {sx:120,sy:200}, // Passo Direita 1 [5]
         {sx:250,sy:200}, // Passo Direita 2 [6]
         {sx:120,sy:300}, // Passo Esquerda 1 [7]
@@ -317,7 +317,10 @@ class Jogador{
         {sx:250,sy:100}, // Passo Cima 2 [10]
         {sx:120,sy:0}, // Passo Baixo 1 [11]
         {sx:250,sy:0}, // Passo Baixo 2 [12]    
-
+        {sx:505,sy:0}, // Manchete esquerda [13]
+        {sx:505,sy:100}, // Toque esquerda [14]
+        {sx:505,sy:200}, // Corte esquerda [15]
+        {sx:505,sy:300} // Saque esquerda [16]
     ]
     renderSelf(){
         contexto.drawImage(this.imagem, this.spriteMovement.sx, this.spriteMovement.sy, 100, 100, this.x, this.y, 100, 100)
@@ -336,6 +339,19 @@ class Jogador{
                 this.spriteMovement = movimento2
             }
         this.passos = !this.passos
+    }
+    mudarConformeLado(direita,esquerda){
+        if(bola.req.x > this.x){
+            this.mudarSpriteJogada(direita)
+        }else if(bola.req.x < this.x){
+            this.mudarSpriteJogada(esquerda)
+        } else if(bola.req.x == this.x){
+            if(timeEsquerda.jogadores.includes(this)){
+                this.mudarSpriteJogada(direita)
+            }else{
+                this.mudarSpriteJogada(esquerda)
+            }
+        }
     }
     andarRodizio(novaposicao){
         if(this.primeiroMovimento){
@@ -470,7 +486,6 @@ class Jogador{
         }
     }
     receber(){
-        this.mudarSpriteJogada(this.movements[1])
         if(timeEsquerda.jogadores.indexOf(this) != -1){
             if(this.x == posicao3Esquerda.x && this.y == posicao3Esquerda.y){
                 if(numeroAleatorio(1) == 0){
@@ -500,9 +515,9 @@ class Jogador{
                 }
             }
         }
+        this.mudarConformeLado(this.movements[1],this.movements[13])
     }
     levantar(){
-        this.mudarSpriteJogada(this.movements[2])
         if(timeEsquerda.jogadores.includes(this)){
             // console.log('esquerda!')
             if(numeroAleatorio(3 == 0)){
@@ -538,14 +553,15 @@ class Jogador{
                 }
             }
         }
+        this.mudarConformeLado(this.movements[2],this.movements[14])
     }
     cortar(){
-        this.mudarSpriteJogada(this.movements[3])
         if(timeEsquerda.jogadores.includes(this)){
             bola.req = gerarPosReq(1545,745)
         }else{
             bola.req = gerarPosReq(850,745)
         }
+        this.mudarConformeLado(this.movements[3],this.movements[15])
     }
 }
 
@@ -562,17 +578,17 @@ function gerarPosReq(xnum, ynum){
 }
 
 const imagemGustavo = new Image()
-imagemGustavo.src = "./images/jogadores/trentas.jpg"
+imagemGustavo.src = "./images/jogadores/TRENTAS.png"
 const imagemVelho = new Image()
 imagemVelho.src = "./images/jogadores/velho.jpg"
 const imagemAmanda = new Image()
-imagemAmanda.src = "./images/jogadores/amanda.jpg"
+imagemAmanda.src = "./images/jogadores/AMANDA.png"
 const imagemNicolas = new Image()
-imagemNicolas.src = "./images/jogadores/nicocas.jpg"
+imagemNicolas.src = "./images/jogadores/NICOLAIS.png"
 const imagemLip = new Image()
-imagemLip.src = "./images/jogadores/lip.jpg"
+imagemLip.src = "./images/jogadores/LIPASCERTO.png"
 const imagemBorn = new Image()
-imagemBorn.src = "./images/jogadores/born.jpg"
+imagemBorn.src = "./images/jogadores/BORN.png"
 
 
 const born = new Jogador("Born", imagemBorn, posicao1Direita)
