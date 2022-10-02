@@ -251,6 +251,10 @@ class Time{
         this.pontos = pontuacao
         this.displayPontos.innerHTML = this.pontos
     }
+    set displaySetsTime(sets){
+        this.sets = sets
+        this.displaySet.innerHTML = this.sets
+    }
 
     realizarRodizio(){
         let index0 = this.jogadores[0]
@@ -484,6 +488,7 @@ class Jogador{
             bola.req = gerarPosReq(1545, 745)
             jogo.ultimo_time_a_tocar_na_bola = timeDireita
         }
+        this.mudarConformeLado(this.movements[4],this.movements[16])
     }
     receber(){
         if(timeEsquerda.jogadores.indexOf(this) != -1){
@@ -621,6 +626,7 @@ class Jogo{
     ultimo_time_a_marcar = null
     time_que_sacou = null
     ultimo_time_a_tocar_na_bola = null
+    time_que_ganhou_o_set = null
     limitadorDaLogica = 0 // Permite que o método logica() rode apenas UMA vez ao parar da bola!
     constructor(timeEsquerda, timeDireita){
         if(!(timeEsquerda instanceof Time) || !(timeDireita instanceof Time)){
@@ -720,7 +726,28 @@ class Jogo{
         return jogagadorzasso
     }
 
-
+    
+    novoSet(){
+        timeDireita.displayPontosTime = 0
+        timeEsquerda.displayPontosTime = 0
+        // this.comecarRally(this.time_que_ganhou_o_set)
+        // this.time_que_ganhou_o_set = null
+    }
+    verificaPontos(){
+        if(timeDireita.pontos >= 3 || timeEsquerda.pontos >= 3){
+            if((timeDireita.pontos - timeEsquerda.pontos) >= 2 || (timeEsquerda.pontos - timeDireita.pontos) >= 2){
+                if(timeDireita.pontos > timeEsquerda.pontos){
+                    timeDireita.displaySetsTime = timeDireita.sets += 1
+                    this.time_que_ganhou_o_set = timeDireita
+                    this.novoSet()
+                }else{
+                    timeEsquerda.displaySetsTime = timeEsquerda.sets += 1   
+                    this.time_que_ganhou_o_set = timeEsquerda  
+                    this.novoSet()
+                }
+            }
+        }
+    }
 
     aumentarPontuacao(time){
         time.displayPontosTime = time.pontos + 1
@@ -733,7 +760,7 @@ class Jogo{
         setTimeout(()=>{
             this.comecarRally(time)
         },6000)
-        //verificaPontos()
+        this.verificaPontos()
     }
     caraoucoroa(){
         if(numeroAleatorio(1) == 0){
