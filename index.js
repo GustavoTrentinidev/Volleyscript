@@ -73,6 +73,18 @@ const posicoes =
 [posicao1Esquerda, posicao6Esquerda, posicao5Esquerda, posicao4Esquerda, posicao3Esquerda, posicao2Esquerda,
 posicao1Direita, posicao6Direita, posicao5Direita, posicao4Direita, posicao3Direita, posicao2Direita]
 
+var posicoes_esquerda = []
+var posicoes_direita = []
+var index_posicoes = 0
+for (let posicao of posicoes){
+    if(index_posicoes <= 5){
+        posicoes_esquerda.push(posicao)
+    }else{
+        posicoes_direita.push(posicao)
+    }
+    index_posicoes++
+}
+
 class ObjetoBola extends Objeto{
     req = {}
     bolaAndando = false
@@ -295,7 +307,7 @@ class Time{
     }
 }
 
-
+let JOGADORES_PARADOS = []
 class Jogador{
     hasBola = false
     constructor(nome = null,imagem, posicao){
@@ -357,19 +369,15 @@ class Jogador{
             }
         }
     }
+    jogadorParado = true
     andarRodizio(novaposicao){
+        this.jogadorParado = false
+        JOGADORES_PARADOS = []
         if(this.primeiroMovimento){
             this.posicaoAntesDeAndar = {x:this.x, y: this.y}
             this.primeiroMovimento = false
-            console.log(this.posicaoAntesDeAndar)
         }
-        let passos = true
         let intervalo = setInterval(() => {
-            if(passos){
-                this.spriteMovement = this.movements[11]
-            }else {
-                this.spriteMovement = this.movements[12]
-            }
             if(timeDireita.jogadores.includes(this)){
                 if(this.x < novaposicao.x){
                     if(this.x != novaposicao.x){
@@ -396,6 +404,8 @@ class Jogador{
                         clearInterval(intervalo) 
                         this.primeiroMovimento = true
                         this.spriteMovement = this.movements[0]
+                        this.jogadorParado = true
+                        this.verificaTodosOsJogadoresParados()
                     }
                 }else{
                     if(this.y != novaposicao.y){
@@ -421,6 +431,8 @@ class Jogador{
                         clearInterval(intervalo) 
                         this.primeiroMovimento = true
                         this.spriteMovement = this.movements[0]
+                        this.jogadorParado = true
+                        this.verificaTodosOsJogadoresParados()
                     }
                 }
             }else{
@@ -449,6 +461,8 @@ class Jogador{
                         clearInterval(intervalo) 
                         this.primeiroMovimento = true
                         this.spriteMovement = this.movements[0]
+                        this.jogadorParado=true
+                        this.verificaTodosOsJogadoresParados()
                     }
                 }else{
                     if(this.y != novaposicao.y){
@@ -474,10 +488,22 @@ class Jogador{
                         clearInterval(intervalo) 
                         this.primeiroMovimento = true
                         this.spriteMovement = this.movements[0]
+                        this.jogadorParado = true
+                        this.verificaTodosOsJogadoresParados()
                     }
                 }
             }
         })
+    }
+    verificaTodosOsJogadoresParados(){
+        TODOS_OS_JOGADORES.forEach(jogador=>{ // if not includes jogador
+            if(jogador.jogadorParado && !JOGADORES_PARADOS.includes(jogador)){
+                JOGADORES_PARADOS.push(jogador)
+            }
+        })
+        if(JOGADORES_PARADOS.length == 12){
+            jogo.quandoTodosPararemDeAndar()
+        }
     }
     sacar(){
         this.mudarSpriteJogada(this.movements[4])
@@ -616,7 +642,7 @@ const random6 = new Jogador("Random6", imagemRandons, posicao6Esquerda)
 timeDireita = new Time('Araquamanos',[born, velho, gustavo, amanda, nicolas, lip], 'direita')
 timeEsquerda = new Time('RandomsPlays',[random1, random2, random3, random4, random5, random6], 'esquerda')
 times = [timeEsquerda, timeDireita]
-
+TODOS_OS_JOGADORES = [born, velho, gustavo, amanda, nicolas, lip, random1, random2, random3, random4, random5, random6]
 function numeroAleatorio(range){
     return Math.round(Math.random() * range) 
 }
@@ -726,41 +752,82 @@ class Jogo{
         return jogagadorzasso
     }
 
-    
+    quandoTodosPararemDeAndar(){
+        if((timeEsquerda.sets != 0 || timeDireita.sets != 0) && (timeEsquerda.pontos == 0 && timeDireita.pontos == 0)){
+            setTimeout(()=>{
+                this.comecarRally(this.time_que_ganhou_o_set)
+            },1000)
+        }else{
+            setTimeout(()=>{
+                this.comecarRally(this.ultimo_time_a_marcar)
+            },1000)
+        }
+    }
+
+    mudarLadosDosTimes(){
+        let aux = timeEsquerda
+        timeEsquerda = timeDireita
+        timeEsquerda.ladoQuadra = "esquerda"
+        timeDireita = aux
+        timeDireita.ladoQuadra = "direita"
+        timeEsquerda.jogadores.forEach((jogador)=>{
+            posicoes_direita.forEach((posicao,index)=>{
+                if(jogador.x == posicao.x && jogador.y == posicao.y ){
+                    // jogador.x = posicoes_esquerda[index].x
+                    // jogador.y = posicoes_esquerda[index].y
+                    jogador.andarRodizio(posicoes_esquerda[index])
+                }
+            })
+        })
+        timeDireita.jogadores.forEach((jogador)=>{
+            posicoes_esquerda.forEach((posicao,index)=>{
+                if(jogador.x == posicao.x && jogador.y == posicao.y){
+                    // jogador.x = posicoes_direita[index].x
+                    // jogador.y = posicoes_direita[index].y
+                    jogador.andarRodizio(posicoes_direita[index])
+                }
+            })
+        })
+    }
     novoSet(){
         timeDireita.displayPontosTime = 0
         timeEsquerda.displayPontosTime = 0
+        this.mudarLadosDosTimes()
         // this.comecarRally(this.time_que_ganhou_o_set)
         // this.time_que_ganhou_o_set = null
     }
     verificaPontos(){
-        if(timeDireita.pontos >= 3 || timeEsquerda.pontos >= 3){
+        if(timeDireita.pontos >= 2 || timeEsquerda.pontos >= 2){
             if((timeDireita.pontos - timeEsquerda.pontos) >= 2 || (timeEsquerda.pontos - timeDireita.pontos) >= 2){
                 if(timeDireita.pontos > timeEsquerda.pontos){
                     timeDireita.displaySetsTime = timeDireita.sets += 1
                     this.time_que_ganhou_o_set = timeDireita
                     this.novoSet()
+                    return true
                 }else{
                     timeEsquerda.displaySetsTime = timeEsquerda.sets += 1   
                     this.time_que_ganhou_o_set = timeEsquerda  
                     this.novoSet()
+                    return true
                 }
             }
         }
+        return false
     }
 
     aumentarPontuacao(time){
         time.displayPontosTime = time.pontos + 1
-        
-        if(this.ultimo_time_a_marcar != time){
+        this.verificaPontos()
+        if(this.ultimo_time_a_marcar != time && !this.verificaPontos()){
             time.realizarRodizio()
+        }else{
+            setTimeout(()=>{
+                this.comecarRally(time)
+            },1000)
         }
         this.ultimo_time_a_marcar = time
         this.time_que_sacou = null
-        setTimeout(()=>{
-            this.comecarRally(time)
-        },6000)
-        this.verificaPontos()
+       
     }
     caraoucoroa(){
         if(numeroAleatorio(1) == 0){
@@ -775,14 +842,11 @@ class Jogo{
         this.jogo_jogada = 0
         timeDireita.num_jogada = 1
         timeEsquerda.num_jogada = 1
-        if(timeEsquerda.sets == 0 && timeDireita.sets == 0 && timeEsquerda.pontos == 0 && timeDireita.pontos == 0){
-            timeDireita.realizarRodizio()
-        }
         time.saque()
         this.jogo_jogada += 1
         this.time_que_sacou = time
         this.ultimo_time_a_tocar_na_bola = time
     }
 }
-
+timeDireita.realizarRodizio()
 const jogo = new Jogo(timeEsquerda, timeDireita)
