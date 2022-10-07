@@ -611,7 +611,7 @@ function gerarPosReq(xnum, ynum){
 const imagemGustavo = new Image()
 imagemGustavo.src = "./images/jogadores/TRENTAS.png"
 const imagemVelho = new Image()
-imagemVelho.src = "./images/jogadores/velho.jpg"
+imagemVelho.src = "./images/jogadores/VELHO.png"
 const imagemAmanda = new Image()
 imagemAmanda.src = "./images/jogadores/AMANDA.png"
 const imagemNicolas = new Image()
