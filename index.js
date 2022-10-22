@@ -4,8 +4,9 @@ const contexto = canvas.getContext("2d")
 const quadraImage = new Image()
 quadraImage.src = "./images/quadrapadrao.jpg"
 const bolaImage = new Image()
-bolaImage.src = "./images/bola.png"
-
+bolaImage.src = "./images/bolaaparada.png"
+const positionImage = new Image()
+positionImage.src = "./images/posicaoimg.png"
 const telaDeInicio = new Image()
 telaDeInicio.src = "./images/telainicio.png"
 
@@ -41,31 +42,22 @@ class PosicaoJogadores extends Objeto{
         return this._y
     }
     
-    renderSelf(){
-        //Esse renderSelf() deve ser retirado quando o jogo estiver completo
-        contexto.drawImage(this.imagem, this.x, this.y, this.w, this.h)
-        if(this.rl == 'l'){
-            contexto.fillStyle = 'red';
-        } else{
-            contexto.fillStyle = 'blue';
-        }
-        contexto.fillRect(this.x, this.y, 100, 100);
-    }
+    
 }
 
-posicao1Esquerda = new PosicaoJogadores(bolaImage, 200, 700, 100, 100,'l')
-posicao6Esquerda = new PosicaoJogadores(bolaImage, 400, 450, 100, 100,'l')
-posicao5Esquerda = new PosicaoJogadores(bolaImage, 200, 200, 100, 100,'l')
-posicao4Esquerda = new PosicaoJogadores(bolaImage, 650, 200, 100, 100,'l')
-posicao3Esquerda = new PosicaoJogadores(bolaImage, 750, 450, 100, 100,'l')
-posicao2Esquerda = new PosicaoJogadores(bolaImage, 650, 700, 100, 100,'l')
+posicao1Esquerda = new PosicaoJogadores(positionImage, 200, 700, 100, 100,'l')
+posicao6Esquerda = new PosicaoJogadores(positionImage, 400, 450, 100, 100,'l')
+posicao5Esquerda = new PosicaoJogadores(positionImage, 200, 200, 100, 100,'l')
+posicao4Esquerda = new PosicaoJogadores(positionImage, 650, 200, 100, 100,'l')
+posicao3Esquerda = new PosicaoJogadores(positionImage, 750, 450, 100, 100,'l')
+posicao2Esquerda = new PosicaoJogadores(positionImage, 650, 700, 100, 100,'l')
 
-posicao1Direita = new PosicaoJogadores(bolaImage, 1500, 200, 100, 100, 'r')
-posicao6Direita = new PosicaoJogadores(bolaImage, 1300, 450, 100, 100, 'r')
-posicao5Direita = new PosicaoJogadores(bolaImage, 1500, 700, 100, 100, 'r')
-posicao4Direita = new PosicaoJogadores(bolaImage, 1050, 700, 100, 100, 'r')
-posicao3Direita = new PosicaoJogadores(bolaImage, 950, 450, 100, 100, 'r')
-posicao2Direita = new PosicaoJogadores(bolaImage, 1050, 200, 100, 100, 'r')
+posicao1Direita = new PosicaoJogadores(positionImage, 1500, 200, 100, 100, 'r')
+posicao6Direita = new PosicaoJogadores(positionImage, 1300, 450, 100, 100, 'r')
+posicao5Direita = new PosicaoJogadores(positionImage, 1500, 700, 100, 100, 'r')
+posicao4Direita = new PosicaoJogadores(positionImage, 1050, 700, 100, 100, 'r')
+posicao3Direita = new PosicaoJogadores(positionImage, 950, 450, 100, 100, 'r')
+posicao2Direita = new PosicaoJogadores(positionImage, 1050, 200, 100, 100, 'r')
 
 
 
@@ -183,7 +175,7 @@ quadra = new Objeto(quadraImage,0,0,1800,1000)
 // Área do jogo começa realmente em x: 125 e y: 105
 // Temina em x: 1545 e y: 745
 telaComeçar = new Objeto(telaDeInicio,0,0,1800,1000)
-bola = new ObjetoBola(bolaImage, posicao1Direita.x, posicao1Direita.y, 130, 155)
+bola = new ObjetoBola(bolaImage, posicao1Direita.x, posicao1Direita.y, 100, 100)
 
 function gameLoop(){
     showScreen.renderSelf()
@@ -245,11 +237,8 @@ class Time{
     sets = 0
     pontos = 0
     num_jogada = 1
-    constructor(nome, jogadores, ladoQuadra){
-        this.nome = nome
-        this.jogadores = jogadores
-        this.ladoQuadra = ladoQuadra
-        if(ladoQuadra == 'direita'){
+    verificaLadoProDisplay(){
+        if(this.ladoQuadra == 'direita'){
             this.displayPontos = document.getElementById('pontosDireita')
             this.displaySet = document.getElementById('setsDireita')
         }else{
@@ -257,7 +246,12 @@ class Time{
             this.displaySet = document.getElementById('setsEsquerda')
         }
     }
-
+    constructor(nome, jogadores, ladoQuadra){
+        this.nome = nome
+        this.jogadores = jogadores
+        this.ladoQuadra = ladoQuadra
+        this.verificaLadoProDisplay()
+    }
     set displayPontosTime(pontuacao){
         console.log(this.pontos , pontuacao)
         this.pontos = pontuacao
@@ -506,7 +500,6 @@ class Jogador{
         }
     }
     sacar(){
-        this.mudarSpriteJogada(this.movements[4])
         if(timeEsquerda.jogadores.indexOf(this)){
             bola.req = gerarPosReq(1545, 745)
             jogo.ultimo_time_a_tocar_na_bola = timeEsquerda
@@ -639,8 +632,8 @@ const random4 = new Jogador("Random4", imagemRandons, posicao4Esquerda)
 const random5 = new Jogador("Random5", imagemRandons, posicao5Esquerda)
 const random6 = new Jogador("Random6", imagemRandons, posicao6Esquerda)
 
-timeDireita = new Time('Araquamanos',[born, velho, gustavo, amanda, nicolas, lip], 'direita')
-timeEsquerda = new Time('RandomsPlays',[random1, random2, random3, random4, random5, random6], 'esquerda')
+timeDireita = new Time('JPA',[born, velho, gustavo, amanda, nicolas, lip], 'direita')
+timeEsquerda = new Time('BRA',[random1, random2, random3, random4, random5, random6], 'esquerda')
 times = [timeEsquerda, timeDireita]
 TODOS_OS_JOGADORES = [born, velho, gustavo, amanda, nicolas, lip, random1, random2, random3, random4, random5, random6]
 function numeroAleatorio(range){
@@ -763,7 +756,22 @@ class Jogo{
             },1000)
         }
     }
-
+    setarPlacar(){
+        timeEsquerda.verificaLadoProDisplay()
+        timeDireita.verificaLadoProDisplay()
+        let nomeEsquerda = document.querySelectorAll('.nome')[0] 
+        let pontosEsquerda = document.getElementById('pontosEsquerda')
+        let setsEsquerda = document.getElementById('setsEsquerda')
+        let nomeDireita = document.querySelectorAll('.nome')[1]
+        let pontosDireita = document.getElementById('pontosDireita')
+        let setsDireita = document.getElementById('setsDireita')
+        nomeEsquerda.innerHTML = timeEsquerda.nome
+        pontosEsquerda.innerHTML = timeEsquerda.pontos
+        setsEsquerda.innerHTML = timeEsquerda.sets
+        nomeDireita.innerHTML = timeDireita.nome
+        pontosDireita.innerHTML = timeDireita.pontos
+        setsDireita.innerHTML = timeDireita.sets
+    }
     mudarLadosDosTimes(){
         let aux = timeEsquerda
         timeEsquerda = timeDireita
@@ -788,6 +796,7 @@ class Jogo{
                 }
             })
         })
+        this.setarPlacar()
     }
     novoSet(){
         timeDireita.displayPontosTime = 0
