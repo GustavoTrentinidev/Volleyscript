@@ -82,6 +82,7 @@ class ObjetoBola extends Objeto{
     bolaAndando = false
     primeiroMovimento = 0
     XIgualAZero = false
+    YIgualAZero = false
     posicaoInicial = {}
     constructor(imagem,x,y,w,h){
         super(imagem,x,y,w,h)
@@ -116,6 +117,8 @@ class ObjetoBola extends Objeto{
         
         if(this.primeiroMovimento == 0 && diferencaDoX == 0){
             this.XIgualAZero = true
+        }else if(this.primeiroMovimento == 0 && diferencaDoY == 0){
+            this.YIgualAZero = true
         }
         let dist = tan * diferencaDoXAtual
 
@@ -142,6 +145,17 @@ class ObjetoBola extends Objeto{
             if(this.y == req.y){
                 this.XIgualAZero = false
             }
+        }else if(this.YIgualAZero){
+            if(this.x != req.x){
+                if(this.x < req.x){
+                    this.x += 5
+                }else if(this.x > req.x) {
+                    this.x -= 5
+                }
+            }
+            if(this.x == req.x){
+                this.YIgualAZero = false
+            }
         }else{
             if(this.x != req.x){
                 if(this.x < req.x && this.y < req.y){
@@ -166,8 +180,6 @@ class ObjetoBola extends Objeto{
             }    
         }
         this.primeiroMovimento += 1
-
-        
     }
 }
 
@@ -642,8 +654,8 @@ const random4 = new Jogador("Random4", imagemRosa, posicao4Esquerda)
 const random5 = new Jogador("Random5", imagemRoxo, posicao5Esquerda)
 const random6 = new Jogador("Random6", imagemAmarelo, posicao6Esquerda)
 
-timeDireita = new Time('JPA',[born, velho, gustavo, amanda, nicolas, lip], 'direita', 'red')
-timeEsquerda = new Time('BRA',[random1, random2, random3, random4, random5, random6], 'esquerda', 'yellow')
+timeDireita = new Time('ARQ',[born, velho, gustavo, amanda, nicolas, lip], 'direita', '#515ae0')
+timeEsquerda = new Time('JLLE',[random1, random2, random3, random4, random5, random6], 'esquerda', 'greenyellow')
 times = [timeEsquerda, timeDireita]
 TODOS_OS_JOGADORES = [born, velho, gustavo, amanda, nicolas, lip, random1, random2, random3, random4, random5, random6]
 function numeroAleatorio(range){
@@ -875,3 +887,4 @@ class Jogo{
 }
 timeDireita.realizarRodizio()
 const jogo = new Jogo(timeEsquerda, timeDireita)
+jogo.setarPlacar()
