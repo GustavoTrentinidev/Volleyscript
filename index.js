@@ -246,10 +246,11 @@ class Time{
             this.displaySet = document.getElementById('setsEsquerda')
         }
     }
-    constructor(nome, jogadores, ladoQuadra){
+    constructor(nome, jogadores, ladoQuadra, cor){
         this.nome = nome
         this.jogadores = jogadores
         this.ladoQuadra = ladoQuadra
+        this.cor = cor
         this.verificaLadoProDisplay()
     }
     set displayPontosTime(pontuacao){
@@ -632,8 +633,8 @@ const random4 = new Jogador("Random4", imagemRandons, posicao4Esquerda)
 const random5 = new Jogador("Random5", imagemRandons, posicao5Esquerda)
 const random6 = new Jogador("Random6", imagemRandons, posicao6Esquerda)
 
-timeDireita = new Time('JPA',[born, velho, gustavo, amanda, nicolas, lip], 'direita')
-timeEsquerda = new Time('BRA',[random1, random2, random3, random4, random5, random6], 'esquerda')
+timeDireita = new Time('JPA',[born, velho, gustavo, amanda, nicolas, lip], 'direita', 'red')
+timeEsquerda = new Time('BRA',[random1, random2, random3, random4, random5, random6], 'esquerda', 'yellow')
 times = [timeEsquerda, timeDireita]
 TODOS_OS_JOGADORES = [born, velho, gustavo, amanda, nicolas, lip, random1, random2, random3, random4, random5, random6]
 function numeroAleatorio(range){
@@ -759,12 +760,18 @@ class Jogo{
     setarPlacar(){
         timeEsquerda.verificaLadoProDisplay()
         timeDireita.verificaLadoProDisplay()
+
         let nomeEsquerda = document.querySelectorAll('.nome')[0] 
         let pontosEsquerda = document.getElementById('pontosEsquerda')
         let setsEsquerda = document.getElementById('setsEsquerda')
         let nomeDireita = document.querySelectorAll('.nome')[1]
         let pontosDireita = document.getElementById('pontosDireita')
         let setsDireita = document.getElementById('setsDireita')
+        let corEsquerda = document.querySelectorAll('.cor')[0]
+        let corDireita = document.querySelectorAll('.cor')[1]
+
+        corEsquerda.style.backgroundColor = timeEsquerda.cor
+        corDireita.style.backgroundColor = timeDireita.cor
         nomeEsquerda.innerHTML = timeEsquerda.nome
         pontosEsquerda.innerHTML = timeEsquerda.pontos
         setsEsquerda.innerHTML = timeEsquerda.sets
