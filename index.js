@@ -615,6 +615,18 @@ imagemLip.src = "./images/jogadores/LIPASCERTO.png"
 const imagemBorn = new Image()
 imagemBorn.src = "./images/jogadores/BORN.png"
 
+const imagemVerde = new Image()
+imagemVerde.src = "./images/jogadores/verde.png"
+const imagemAzul = new Image()
+imagemAzul.src = "./images/jogadores/azul.png"
+const imagemLaranja = new Image()
+imagemLaranja.src = "./images/jogadores/laranja.png"
+const imagemRosa = new Image()
+imagemRosa.src = "./images/jogadores/rosa.png"
+const imagemRoxo = new Image()
+imagemRoxo.src = "./images/jogadores/roxo.png"
+const imagemAmarelo = new Image()
+imagemAmarelo.src = "./images/jogadores/amarelo.png"
 
 const born = new Jogador("Born", imagemBorn, posicao1Direita)
 const velho = new Jogador("Velho", imagemVelho, posicao2Direita)
@@ -623,15 +635,12 @@ const amanda = new Jogador("Amanda", imagemAmanda, posicao4Direita)
 const nicolas = new Jogador("Nicolas", imagemNicolas, posicao5Direita)
 const lip = new Jogador("Lip", imagemLip, posicao6Direita)
 
-const imagemRandons = new Image()
-imagemRandons.src = "./images/jogadores/LIPASCERTO.png"
-
-const random1 = new Jogador("Random1", imagemRandons, posicao1Esquerda)
-const random2 = new Jogador("Random2", imagemRandons, posicao2Esquerda)
-const random3 = new Jogador("Random3", imagemRandons, posicao3Esquerda)
-const random4 = new Jogador("Random4", imagemRandons, posicao4Esquerda)
-const random5 = new Jogador("Random5", imagemRandons, posicao5Esquerda)
-const random6 = new Jogador("Random6", imagemRandons, posicao6Esquerda)
+const random1 = new Jogador("Random1", imagemVerde, posicao1Esquerda)
+const random2 = new Jogador("Random2", imagemAzul, posicao2Esquerda)
+const random3 = new Jogador("Random3", imagemLaranja, posicao3Esquerda)
+const random4 = new Jogador("Random4", imagemRosa, posicao4Esquerda)
+const random5 = new Jogador("Random5", imagemRoxo, posicao5Esquerda)
+const random6 = new Jogador("Random6", imagemAmarelo, posicao6Esquerda)
 
 timeDireita = new Time('JPA',[born, velho, gustavo, amanda, nicolas, lip], 'direita', 'red')
 timeEsquerda = new Time('BRA',[random1, random2, random3, random4, random5, random6], 'esquerda', 'yellow')
