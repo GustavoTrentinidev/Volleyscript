@@ -2,9 +2,9 @@ const canvas = document.getElementById("game-canvas")
 const contexto = canvas.getContext("2d")
 
 const quadraImage = new Image()
-quadraImage.src = "./images/quadrapadrao.jpg"
+quadraImage.src = "./images/quadra_teste_feio.png"
 const bolaImage = new Image()
-bolaImage.src = "./images/bolaaparada.png"
+bolaImage.src = "./images/bolasombra.png"
 const positionImage = new Image()
 positionImage.src = "./images/posicaoimg.png"
 const telaDeInicio = new Image()
@@ -26,7 +26,7 @@ class Objeto{
     renderSelf(){
         contexto.drawImage(this.imagem, this.x, this.y, this.w, this.h)
         // contexto.fillStyle = 'red'
-        // contexto.fillRect(850, 780, 100, 100);
+        // contexto.fillRect(800, 780, 100, 100);
     }
 }
 
@@ -187,7 +187,7 @@ quadra = new Objeto(quadraImage,0,0,1800,1000)
 // Área do jogo começa realmente em x: 125 e y: 105
 // Temina em x: 1545 e y: 745
 telaComeçar = new Objeto(telaDeInicio,0,0,1800,1000)
-bola = new ObjetoBola(bolaImage, posicao1Direita.x, posicao1Direita.y, 100, 100)
+bola = new ObjetoBola(bolaImage, posicao1Direita.x, posicao1Direita.y, 70, 80)
 
 function gameLoop(){
     showScreen.renderSelf()
@@ -227,6 +227,13 @@ const screens = {
                 bola.atualizaPosicao({x: bola.req.x, y: bola.req.y})
             } //Bola anda constantemente quando posição for diferente da requisição
             //tocouNaBola()
+        }
+    },
+    endScreen:{
+        nome: 'EndScreen',
+        renderSelf(){
+            contexto.font = "30px Arial";
+            contexto.fillText("ARQ venceu!",10,50);
         }
     }
 }
@@ -514,10 +521,18 @@ class Jogador{
     }
     sacar(){
         if(timeEsquerda.jogadores.indexOf(this)){
-            bola.req = gerarPosReq(1545, 745)
+            if(numeroAleatorio(9)==9){
+                bola.req = gerarPosReq(1545,900,'esquerda')
+            }else{
+                bola.req = gerarPosReq(1545,900,'direita')
+            }
             jogo.ultimo_time_a_tocar_na_bola = timeEsquerda
         }else{
-            bola.req = gerarPosReq(1545, 745)
+            if(numeroAleatorio(9)==9){
+                bola.req = gerarPosReq(1545,900,'direita')
+            }else{
+                bola.req = gerarPosReq(1545,900,'esquerda')
+            }
             jogo.ultimo_time_a_tocar_na_bola = timeDireita
         }
         this.mudarConformeLado(this.movements[4],this.movements[16])
@@ -532,7 +547,11 @@ class Jogador{
                 }
             }else{
                 if(numeroAleatorio(3) == 0){
-                    bola.req = gerarPosReq(1545, 745)
+                    if(numeroAleatorio(3)==3){
+                        bola.req = gerarPosReq(1545, 900, 'esquerda')
+                    }else{
+                        bola.req = gerarPosReq(1545, 900, 'direita')
+                    }
                 }else {
                     bola.req = {x: posicao3Esquerda.x, y: posicao3Esquerda.y}
                 }
@@ -546,7 +565,11 @@ class Jogador{
                 }
             }else{
                 if(numeroAleatorio(3) == 0){
-                    bola.req = gerarPosReq(1545, 745)
+                    if(numeroAleatorio(3)==3){
+                        bola.req = gerarPosReq(1545, 900, 'direita')
+                    }else{
+                        bola.req = gerarPosReq(1545, 900, 'esquerda')
+                    }
                 }else {
                     bola.req = {x: posicao3Direita.x, y: posicao3Direita.y}
                 }
@@ -558,7 +581,11 @@ class Jogador{
         if(timeEsquerda.jogadores.includes(this)){
             // console.log('esquerda!')
             if(numeroAleatorio(3 == 0)){
-                bola.req = gerarPosReq(1545, 745)
+                if(numeroAleatorio(3)==3){
+                    bola.req = gerarPosReq(1545, 900, 'esquerda')
+                }else{
+                    bola.req = gerarPosReq(1545, 900, 'direita')
+                }
             }else{
                 if(this.x == posicao4Esquerda.x && this.y == posicao4Esquerda.y){
                     bola.req = {x: posicao2Esquerda.x, y: posicao2Esquerda.y}
@@ -575,7 +602,11 @@ class Jogador{
         }else{
             // console.log('direita!')
             if(numeroAleatorio(3 == 0)){
-                bola.req = gerarPosReq(1545, 745)
+                if(numeroAleatorio(3)==3){
+                    bola.req = gerarPosReq(1545, 900, 'direita')
+                }else{
+                    bola.req = gerarPosReq(1545, 900, 'esquerda')
+                }
             }else{
                 if(this.x == posicao4Direita.x && this.y == posicao4Direita.y){
                     bola.req = {x: posicao2Direita.x, y: posicao2Direita.y}
@@ -594,23 +625,38 @@ class Jogador{
     }
     cortar(){
         if(timeEsquerda.jogadores.includes(this)){
-            bola.req = gerarPosReq(1545,745)
+            if(numeroAleatorio(8)==8){
+                bola.req = gerarPosReq(1545,900,'direita')
+            }else{
+                bola.req = gerarPosReq(1545,900,'esquerda')
+            }
         }else{
-            bola.req = gerarPosReq(850,745)
+            if(numeroAleatorio(8)==8){
+                bola.req = gerarPosReq(1545,900,'esquerda')
+            }else{
+                bola.req = gerarPosReq(1545,900,'direita')
+            }
         }
         this.mudarConformeLado(this.movements[3],this.movements[15])
     }
 }
 
-function gerarPosReq(xnum, ynum){
+function gerarPosReq(xnum, ynum, ladoParaIr){
     let x = numeroAleatorio(xnum)
     let y = numeroAleatorio(ynum)
-    while(x % 10 != 0){
-        x = numeroAleatorio(xnum)
+    if(ladoParaIr == 'esquerda'){
+        while(x % 10 != 0 || x < 850){
+            x = numeroAleatorio(xnum)
+        }
+    }else if(ladoParaIr == 'direita'){
+        while(x % 10 != 0 || x > 850){
+            x = numeroAleatorio(xnum)
+        }
     }
     while(y % 5 != 0){
         y = numeroAleatorio(ynum)
     }
+    console.log(x)
     return {x: x, y: y}
 }
 
