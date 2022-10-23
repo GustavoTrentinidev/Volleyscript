@@ -2,7 +2,7 @@ const canvas = document.getElementById("game-canvas")
 const contexto = canvas.getContext("2d")
 
 const quadraImage = new Image()
-quadraImage.src = "./images/quadra_teste_feio.png"
+quadraImage.src = "./images/quadrapadrao.jpg"
 const bolaImage = new Image()
 bolaImage.src = "./images/bolasombra.png"
 const positionImage = new Image()
@@ -232,8 +232,16 @@ const screens = {
     endScreen:{
         nome: 'EndScreen',
         renderSelf(){
-            contexto.font = "30px Arial";
-            contexto.fillText("ARQ venceu!",10,50);
+            quadra.renderSelf()
+            contexto.font = "800 100px Verdana"
+            contexto.fillText(`${jogo.timeVencedor.nome} venceu!`,600,500)
+            let posicoesFinais = [{x:700, y:700}, {x:750, y:700}, {x:800, y:700}, {x:850, y:700}, {x:900, y:700}, {x:950, y:700}]
+            jogo.timeVencedor.jogadores.forEach((player)=>{
+                player.renderSelf()
+            })
+            jogo.timeVencedor.jogadores.forEach((player,index)=>{
+                player.andarRodizio(posicoesFinais[index])
+            })
         }
     }
 }
@@ -242,7 +250,7 @@ const screens = {
 var eventos = ["keydown" , "click"]
 eventos.forEach((evento) => {
     window.addEventListener(evento, ()=>{
-        if(showScreen != screens.gameScreen){
+        if(showScreen == screens.startScreen){
             changeScreen(screens.gameScreen)
             jogo.caraoucoroa()
         }
@@ -714,6 +722,7 @@ class Jogo{
     time_que_sacou = null
     ultimo_time_a_tocar_na_bola = null
     time_que_ganhou_o_set = null
+    timeVencedor = null
     limitadorDaLogica = 0 // Permite que o método logica() rode apenas UMA vez ao parar da bola!
     constructor(timeEsquerda, timeDireita){
         if(!(timeEsquerda instanceof Time) || !(timeDireita instanceof Time)){
@@ -879,6 +888,15 @@ class Jogo{
     novoSet(){
         timeDireita.displayPontosTime = 0
         timeEsquerda.displayPontosTime = 0
+        if(timeEsquerda.sets == 3 || timeDireita.sets == 3){
+            if(timeEsquerda.sets > timeDireita.sets){
+                this.timeVencedor = timeEsquerda
+            }else{
+                this.timeVencedor = timeDireita
+            }
+            changeScreen(screens.endScreen)
+            return
+        }
         this.mudarLadosDosTimes()
         // this.comecarRally(this.time_que_ganhou_o_set)
         // this.time_que_ganhou_o_set = null
