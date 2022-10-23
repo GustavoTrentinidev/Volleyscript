@@ -857,7 +857,11 @@ class Jogo{
                 if(jogador.x == posicao.x && jogador.y == posicao.y ){
                     // jogador.x = posicoes_esquerda[index].x
                     // jogador.y = posicoes_esquerda[index].y
-                    jogador.andarRodizio(posicoes_esquerda[index])
+                    if(index == 5){
+                        jogador.andarRodizio(posicoes_esquerda[0])
+                    }else{
+                        jogador.andarRodizio(posicoes_esquerda[index + 1])
+                    }
                 }
             })
         })
