@@ -2,7 +2,7 @@ const canvas = document.getElementById("game-canvas")
 const contexto = canvas.getContext("2d")
 
 const quadraImage = new Image()
-quadraImage.src = "./images/quadrapadrao.jpg"
+quadraImage.src = "./images/quadraoficial.jpg"
 const bolaImage = new Image()
 bolaImage.src = "./images/bolasombra.png"
 const positionImage = new Image()
@@ -361,7 +361,7 @@ class Jogador{
         {sx:505,sy:300} // Saque esquerda [16]
     ]
     renderSelf(){
-        contexto.drawImage(this.imagem, this.spriteMovement.sx, this.spriteMovement.sy, 100, 100, this.x, this.y, 100, 100)
+        contexto.drawImage(this.imagem, this.spriteMovement.sx, this.spriteMovement.sy, 100, 100, this.x, this.y, 150, 150)
     }
     mudarSpriteJogada(spritePosicaoJogada){
         this.spriteMovement = spritePosicaoJogada
